@@ -71,6 +71,9 @@
   }
   .tab.on .n{background:rgba(0,0,0,.18);color:#12141a}
 
+  .swipe-hint{display:none;font-size:12px;color:#6f778a;margin:0 0 12px;letter-spacing:.5px}
+  @media (pointer:coarse){ .swipe-hint{display:block} }
+
   .panel{display:none;animation:fade .25s ease}
   .panel.on{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
@@ -166,6 +169,7 @@
   </header>
 
   <nav class="tabs" id="tabs"></nav>
+  <div class="swipe-hint">← 左右滑动 / 方向键切换游戏 →</div>
   <main id="panels"></main>
 
   <footer class="src">
@@ -271,13 +275,47 @@ function tick(){
   });
 }
 
-$("#tabs").addEventListener("click",e=>{
-  const b=e.target.closest(".tab"); if(!b) return;
-  current=b.dataset.id;
+function selectGame(id, scroll=true){
+  if(!DATA.some(g=>g.id===id)) return;
+  current=id;
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.id===current));
   document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.dataset.id===current));
   document.documentElement.style.setProperty("--accent",DATA.find(g=>g.id===current).accent);
-  window.scrollTo({top:0,behavior:"smooth"});
+  const onTab=document.querySelector(`.tab[data-id="${current}"]`);
+  if(onTab) onTab.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});
+  if(scroll) window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function step(dir){
+  const i=DATA.findIndex(g=>g.id===current);
+  selectGame(DATA[(i+dir+DATA.length)%DATA.length].id);
+}
+
+$("#tabs").addEventListener("click",e=>{
+  const b=e.target.closest(".tab"); if(!b) return;
+  selectGame(b.dataset.id);
+});
+
+// 左右滑动切换（仅在横向位移明显大于纵向时触发，避免影响上下滚动）
+let tx=0,ty=0,ts=0,inTabs=false;
+document.addEventListener("touchstart",e=>{
+  if(e.touches.length!==1){ tx=ty=0; return; }
+  const t=e.touches[0];
+  tx=t.clientX; ty=t.clientY; ts=Date.now();
+  inTabs=!!e.target.closest("nav.tabs");
+},{passive:true});
+document.addEventListener("touchend",e=>{
+  if(!tx||inTabs) return;
+  const t=e.changedTouches[0], dx=t.clientX-tx, dy=t.clientY-ty;
+  tx=ty=0;
+  if(Date.now()-ts>800) return;
+  if(Math.abs(dx)<60 || Math.abs(dx)<Math.abs(dy)*1.6) return;
+  step(dx<0?1:-1);
+},{passive:true});
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight") step(1);
+  else if(e.key==="ArrowLeft") step(-1);
 });
 
 document.documentElement.style.setProperty("--accent",DATA[0].accent);
