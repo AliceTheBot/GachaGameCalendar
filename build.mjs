@@ -227,7 +227,7 @@ const dateStr = (() => {
 
 const tpl = fs.readFileSync(path.join(ROOT, 'template.html'), 'utf8');
 const html = tpl
-  .replace('__DATE__', dateStr)
+  .replaceAll('__DATE__', dateStr)
   .replace('__DATA__', JSON.stringify(data));
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), html);
