@@ -1,3 +1,5 @@
 node_modules/
 _scratch/
+public/
+standalone.html
 .DS_Store

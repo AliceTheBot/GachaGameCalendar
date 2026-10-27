@@ -3,10 +3,11 @@
 五款游戏的**限时活动**图文日历，顶部 tab 切换游戏，进行中的活动实时显示剩余时间。
 持续整版本的长线活动、战令、常驻玩法会收进折叠区，不占主列表。
 
-## 页面
+## 构建产物
 
-- `index.html` — 部署用。图片在 `assets/`，两者需一起发布。
-- `standalone.html` — 单文件版，图片已内嵌 base64，可直接发给别人 / 本地双击打开。
+- `public/` — **部署目录**，只放 `index.html` 和它用到的图（约 2 MB）。
+- `index.html` + `assets/` — 仓库根目录的同款页面，给 GitHub Pages「分支直出」用。
+- `standalone.html` — 单文件版，图片内嵌 base64，可直接发给别人 / 本地打开（不进仓库、不入部署）。
 
 ## 数据从哪来
 
@@ -27,7 +28,7 @@ npm install --ignore-scripts   # sharp 的安装脚本在受限环境下会被�
 npm run build
 ```
 
-产物：`index.html`、`standalone.html`、`data/last-build.json`（本次构建的结构化结果）。
+产物：`public/`、`index.html`、`standalone.html`、`data/last-build.json`（本次构建的结构化结果）。
 `npm run build:no-discover` 只渲染 `curated.json`，不联网抓新活动，适合离线改样式。
 
 ## 自动更新
@@ -37,11 +38,23 @@ npm run build
 
 ## 部署
 
-1. 推到 GitHub 仓库；
-2. Settings → Pages → Source 选 `Deploy from a branch`，分支 `main`、目录 `/ (root)`；
-3. 等 Actions 跑完即可访问 `https://<用户名>.github.io/<仓库名>/`。
+### Cloudflare Workers（当前用的）
 
-Cloudflare Pages 同理：构建命令留空，输出目录填 `/`。
+仓库里的 `wrangler.jsonc` 已把静态资源目录指到 `./public`，所以**不会**再把 `node_modules` 传上去。
+
+在 Workers & Pages 的构建设置里确认两项：
+
+| 设置 | 值 |
+|---|---|
+| Build command | `npm ci && npm run build` |
+| Deploy command | `npx wrangler deploy` |
+
+`public/` 是构建产物、不进仓库，所以 Build command 里必须有 `npm run build`，否则部署时找不到目录。
+
+### GitHub Pages（备选）
+
+Settings → Pages → Source 选 `Deploy from a branch`，分支 `main`、目录 `/ (root)`。
+根目录的 `index.html` + `assets/` 就是完整站点。
 
 ## 维护
 

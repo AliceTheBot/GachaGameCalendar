@@ -6,12 +6,16 @@
   "description": "五款二次元游戏限时活动日历，每周五中午自动更新",
   "scripts": {
     "build": "node build.mjs",
-    "build:no-discover": "node build.mjs --no-discover"
+    "build:no-discover": "node build.mjs --no-discover",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "sharp": "^0.34.4"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "wrangler": "^4.153.0"
   }
 }

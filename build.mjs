@@ -232,6 +232,18 @@ const html = tpl
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), html);
 
+// Cloudflare / 静态托管的发布目录：只含页面和它用到的图
+const PUB = path.join(ROOT, 'public');
+fs.rmSync(PUB, { recursive: true, force: true });
+fs.mkdirSync(path.join(PUB, 'assets'), { recursive: true });
+fs.writeFileSync(path.join(PUB, 'index.html'), html);
+const used = new Set([...html.matchAll(/assets\/[\w.-]+\.webp/g)].map(m => m[0]));
+for (const rel of used) {
+  const src = path.join(ROOT, rel);
+  if (fs.existsSync(src)) fs.copyFileSync(src, path.join(PUB, rel));
+}
+console.log(`发布目录：public/（${used.size} 张图）`);
+
 // 单文件版：图片内嵌 base64，方便直接发给别人/本地打开
 const cache = new Map();
 const toDataURI = rel => {
