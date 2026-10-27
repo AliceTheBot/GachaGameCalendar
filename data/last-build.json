@@ -1,11 +1,12 @@
 {
- "at": "2026-10-27T10:24:00.381Z",
+ "at": "2026-10-27T10:32:12.650Z",
  "data": [
   {
    "id": "genshin",
    "name": "原神",
    "version": "7.1「往冥府的安魂歌」",
    "accent": "#e8c37a",
+   "logo": "assets/logo-genshin.webp",
    "events": [
     {
      "t": "祝圣移涌",
@@ -79,6 +80,7 @@
    "name": "星穹铁道",
    "version": "4.6「月升之前，与兽共舞」",
    "accent": "#9b8cff",
+   "logo": "assets/logo-starrail.webp",
    "events": [
     {
      "t": "星际和平盛典：一镜到底",
@@ -141,6 +143,7 @@
    "name": "绝区零",
    "version": "3.3「重返天空的旅程」",
    "accent": "#ffd23f",
+   "logo": "assets/logo-zzz.webp",
    "events": [
     {
      "t": "赛博圣手，出诊！",
@@ -189,6 +192,7 @@
    "name": "鸣潮",
    "version": "3.7「镜锁妄世，心照红尘」",
    "accent": "#59d6e0",
+   "logo": "assets/logo-wuwa.webp",
    "events": [
     {
      "t": "朝月鱼涌",
@@ -263,6 +267,7 @@
    "name": "终末地",
    "version": "「丹青渡」",
    "accent": "#7fc9a6",
+   "logo": "assets/logo-endfield.webp",
    "events": [
     {
      "t": "卡莉的芳菲童话",
@@ -306,6 +311,7 @@
    "name": "异环",
    "version": "1.4「祷歌为谁而诵」",
    "accent": "#7ec8ff",
+   "logo": "assets/logo-nte.webp",
    "events": [
     {
      "t": "澄明环线",

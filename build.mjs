@@ -194,6 +194,7 @@ function buildGame(g, allEvents) {
   const toCard = e => ({ t: e.title, img: e.img || '', s: e.s, e: e.e, d: e.desc || '', fit: e.fit, pos: e.pos, st: e.st });
   return {
     id: g.id, name: g.name, version: g.version, accent: g.accent,
+    logo: `assets/logo-${g.id}.webp`,
     events: short.map(toCard),
     soon: curated.notes.filter(n => n.game === g.id).map(n => ({ t: n.t, d: n.d, s: n.s })),
     folded: folded.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, why: e.why || '持续整版本', img: e.img || '' })),
@@ -237,7 +238,9 @@ const PUB = path.join(ROOT, 'public');
 fs.rmSync(PUB, { recursive: true, force: true });
 fs.mkdirSync(path.join(PUB, 'assets'), { recursive: true });
 fs.writeFileSync(path.join(PUB, 'index.html'), html);
-const used = new Set([...html.matchAll(/assets\/[\w.-]+\.webp/g)].map(m => m[0]));
+const used = new Set([...html.matchAll(/assets\/[\w.-]+\.(?:webp|png)/g)].map(m => m[0]));
+used.add('assets/favicon.png');
+for (const g of data) used.add(`assets/logo-${g.id}.webp`);
 for (const rel of used) {
   const src = path.join(ROOT, rel);
   if (fs.existsSync(src)) fs.copyFileSync(src, path.join(PUB, rel));
@@ -257,7 +260,7 @@ const toDataURI = rel => {
   cache.set(rel, out);
   return out;
 };
-const standalone = html.replace(/assets\/[\w.-]+\.webp/g, toDataURI);
+const standalone = html.replace(/assets\/[\w.-]+\.(?:webp|png)/g, toDataURI);
 fs.writeFileSync(path.join(ROOT, 'standalone.html'), standalone);
 
 fs.writeFileSync(path.join(DATA_DIR, 'last-build.json'), JSON.stringify({ at: new Date().toISOString(), data }, null, 1));
