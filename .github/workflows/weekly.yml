@@ -1,0 +1,44 @@
+name: weekly-update
+
+on:
+  schedule:
+    # UTC 周五 04:00 = 北京时间周五 12:00
+    - cron: "0 4 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-update
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build page
+        run: node build.mjs
+
+      - name: Commit & push
+        run: |
+          git config user.name "activity-bot"
+          git config user.email "activity-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "没有变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: weekly activity update $(date -u +%Y-%m-%d)"
+          git push

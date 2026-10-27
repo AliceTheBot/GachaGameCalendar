@@ -1,0 +1,17 @@
+{
+  "name": "activity-calendar",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "五款二次元游戏限时活动日历，每周五中午自动更新",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:no-discover": "node build.mjs --no-discover"
+  },
+  "dependencies": {
+    "sharp": "^0.34.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
