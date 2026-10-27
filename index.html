@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>五游限时活动一览 · 2026.10.27</title>
+<title>活动日历 · 2026.10.27</title>
 <style>
   :root{
     --bg:#0b0d12;
@@ -48,12 +48,11 @@
 
   nav.tabs{
     position:sticky;top:0;z-index:20;
-    display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;
+    display:flex;flex-wrap:wrap;gap:8px;
     padding:12px 0;margin-bottom:6px;
     background:linear-gradient(var(--bg) 70%, transparent);
     backdrop-filter:blur(8px);
   }
-  nav.tabs::-webkit-scrollbar{display:none}
   .tab{
     flex:none;cursor:pointer;border:1px solid var(--line);
     background:rgba(255,255,255,.035);color:var(--dim);
@@ -149,6 +148,8 @@
     .top-right{display:none}
     .grid{grid-template-columns:1fr}
     .note{margin-left:0}
+    .tab{padding:7px 12px;font-size:13px}
+    nav.tabs{gap:6px;padding:8px 0}
   }
 </style>
 </head>
@@ -158,8 +159,7 @@
     <div class="brand">
       <div class="logo">活</div>
       <div>
-        <h1>五游限时活动一览</h1>
-        <div class="sub">原神 · 崩坏：星穹铁道 · 绝区零 · 鸣潮 · 明日方舟：终末地</div>
+        <h1>活动日历</h1>
       </div>
     </div>
     <div class="top-right">
