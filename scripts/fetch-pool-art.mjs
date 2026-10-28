@@ -94,7 +94,10 @@ function pickDyn(list, name, used) {
     if (DYN_GOOD.test(head) && !DYN_BAD.test(head)) s += 3;
     if (head.length < 40) s += 1;
     return { p, s };
-  }).filter(x => x.s > 0).sort((a, b) => b.s - a.s);
+  }).filter(x => {
+    const head = x.p.text.split('\n')[0];
+    return x.s > 0 && DYN_GOOD.test(head) && !DYN_BAD.test(head);
+  }).sort((a, b) => b.s - a.s);
   return scored[0]?.p || null;
 }
 

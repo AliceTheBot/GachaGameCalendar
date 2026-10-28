@@ -9,8 +9,8 @@
     "s": "2026-10-13T18:00:00+08:00",
     "e": "2026-11-03T14:59:00+08:00",
     "imgs": [
-      "assets/pool-genshin-0.webp",
-      "assets/pool-genshin-1.webp"
+      "assets/pool-genshin-0-0.webp",
+      "assets/pool-genshin-0-1.webp"
     ]
   },
   {
@@ -23,8 +23,8 @@
     "s": "2026-09-28T11:00:00+08:00",
     "e": "2026-11-10T15:00:00+08:00",
     "imgs": [
-      "assets/pool-starrail-0.webp",
-      "assets/pool-starrail-1.webp"
+      "assets/pool-starrail-1-0.webp",
+      "assets/pool-starrail-1-1.webp"
     ]
   },
   {
@@ -37,8 +37,8 @@
     "s": "2026-10-21T10:00:00+08:00",
     "e": "2026-11-11T05:59:00+08:00",
     "imgs": [
-      "assets/pool-zzz-0.webp",
-      "assets/pool-zzz-1.webp"
+      "assets/pool-zzz-2-0.webp",
+      "assets/pool-zzz-2-1.webp"
     ]
   },
   {
@@ -50,7 +50,7 @@
     "s": "2026-10-22T10:00:00+08:00",
     "e": "2026-11-11T11:59:00+08:00",
     "imgs": [
-      "assets/pool-wuwa-0.webp"
+      "assets/pool-wuwa-3-0.webp"
     ]
   },
   {
@@ -62,7 +62,7 @@
     "s": "2026-10-15T10:00:00+08:00",
     "e": "2026-11-05T11:59:00+08:00",
     "imgs": [
-      "assets/pool-endfield-0.webp"
+      "assets/pool-endfield-4-0.webp"
     ]
   },
   {
@@ -86,7 +86,7 @@
     "s": "2026-10-15T10:00:00+08:00",
     "e": "2026-11-05T05:59:00+08:00",
     "imgs": [
-      "assets/pool-nte-0.webp"
+      "assets/pool-nte-6-0.webp"
     ]
   }
 ]

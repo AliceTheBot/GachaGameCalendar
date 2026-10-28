@@ -1,5 +1,5 @@
 {
- "at": "2026-10-28T14:38:03.353Z",
+ "at": "2026-10-28T14:53:09.058Z",
  "data": [
   {
    "id": "genshin",
@@ -31,8 +31,8 @@
       "爱可菲"
      ],
      "imgs": [
-      "assets/pool-genshin-0.webp",
-      "assets/pool-genshin-1.webp"
+      "assets/pool-genshin-0-0.webp",
+      "assets/pool-genshin-0-1.webp"
      ],
      "pool": "「凝冰」角色活动祈愿 第二期",
      "s": "2026-10-13T18:00:00+08:00",
@@ -100,14 +100,6 @@
    "logo": "assets/logo-starrail.webp",
    "events": [
     {
-     "t": "星穹铁道 4.7 版本前瞻《阿哈之夜》",
-     "img": "assets/pv-starrail-aha.webp",
-     "s": "2026-10-27T11:30:00.000Z",
-     "e": "2026-10-30T20:00:00.000Z",
-     "d": "官方直播间：新版本内容、兑换码与前瞻福利。",
-     "pv": "2026-10-30T11:30:00.000Z"
-    },
-    {
      "t": "星际和平盛典：一镜到底",
      "img": "assets/starrail-11.webp",
      "s": "2026-10-21T12:00:00+08:00",
@@ -123,8 +115,8 @@
       "千冶·刃"
      ],
      "imgs": [
-      "assets/pool-starrail-0.webp",
-      "assets/pool-starrail-1.webp"
+      "assets/pool-starrail-1-0.webp",
+      "assets/pool-starrail-1-1.webp"
      ],
      "pool": "4.6 活动跃迁 · 其二（真珠 9/28 起 / 千冶·刃 10/21 起）",
      "s": "2026-09-28T11:00:00+08:00",
@@ -195,8 +187,8 @@
       "维琳娜"
      ],
      "imgs": [
-      "assets/pool-zzz-0.webp",
-      "assets/pool-zzz-1.webp"
+      "assets/pool-zzz-2-0.webp",
+      "assets/pool-zzz-2-1.webp"
      ],
      "pool": "3.3 限定调频（维琳娜为复刻）",
      "s": "2026-10-21T10:00:00+08:00",
@@ -273,7 +265,7 @@
       "锁暝"
      ],
      "imgs": [
-      "assets/pool-wuwa-0.webp"
+      "assets/pool-wuwa-3-0.webp"
      ],
      "pool": "「余心所向九死未悔」角色活动唤取（同期另有「显影于明日」「非定义光谱」）",
      "s": "2026-10-22T10:00:00+08:00",
@@ -355,25 +347,20 @@
       "祀"
      ],
      "imgs": [
-      "assets/pool-endfield-0.webp"
+      "assets/pool-endfield-4-0.webp"
      ],
      "pool": "「万物更新」特许寻访",
      "s": "2026-10-15T10:00:00+08:00",
      "e": "2026-11-05T11:59:00+08:00"
-    },
-    {
-     "chars": [
-      "汤汤"
-     ],
-     "imgs": [
-      "assets/pool-endfield-5-0.webp"
-     ],
-     "pool": "「祖泉的新流」重构寻访",
-     "s": "2026-10-29T12:00:00+08:00",
-     "e": "2026-11-19T11:59:00+08:00"
     }
    ],
-   "soon": [],
+   "soon": [
+    {
+     "t": "汤汤 · 「祖泉的新流」重构寻访",
+     "d": "10/29 12:00 开启",
+     "s": "即将开启"
+    }
+   ],
    "folded": [
     {
      "n": "万物有灵（7 日签到）",
@@ -439,7 +426,7 @@
       "明音凛"
      ],
      "imgs": [
-      "assets/pool-nte-0.webp"
+      "assets/pool-nte-6-0.webp"
      ],
      "pool": "「灿烂的星」限定棋盘",
      "s": "2026-10-15T10:00:00+08:00",

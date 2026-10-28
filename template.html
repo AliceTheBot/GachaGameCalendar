@@ -138,6 +138,8 @@
   }
   article.card.pv .count{color:var(--accent);font-weight:600;letter-spacing:.3px}
   article.card.pv .range{color:var(--accent)}
+  article.card.pv .thumb{aspect-ratio:2.25/1}
+  article.card.pv .desc{-webkit-line-clamp:1}
   article.card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 45%, transparent);
     box-shadow:var(--shadow)}
   .thumb{position:relative;background:#0e1017;line-height:0;aspect-ratio:16/9;overflow:hidden}
@@ -206,7 +208,7 @@
   }
   .pool.soon{border-style:dashed;background:var(--card)}
   .pool-media{
-    position:relative;flex:none;width:min(44%,240px);aspect-ratio:16/9;
+    position:relative;flex:none;width:min(38%,200px);aspect-ratio:16/9;
     border-radius:10px;overflow:hidden;background:var(--chip2);border:1px solid var(--line);
   }
   .pool-slides{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
@@ -336,7 +338,7 @@ function card(ev){
       <span class="state ${cls}">${label}</span></div>
     <div class="body">
       <h3>${ev.t}</h3>
-      <div class="range">${fmtRange(ev)}</div>
+      ${pv?"":`<div class="range">${fmtRange(ev)}</div>`}
       <p class="desc">${ev.d||""}</p>
       <div class="foot">
         <span class="count" data-count="${pv?"pv":live?"end":"start"}" data-t="${pv||(live?e:s)}">${pv?"距开播":live?"剩余":"距开始"} —</span>
@@ -369,7 +371,6 @@ function poolRow(p){
         <span class="pool-time" data-count="${soon?"start":"end"}" data-t="${soon?st:en}"></span>
       </div>
       <div class="pool-chars">${chars.map(c=>`<b>${c}</b>`).join("")}</div>
-      <div class="pool-sub">${p.pool}</div>
       <div class="pool-bar"><i style="width:${soon?0:pct}%"></i></div>
     </div>
   </div>`;

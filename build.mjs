@@ -251,15 +251,22 @@ function buildGame(g, allEvents) {
     notes.push({ t: n.t, d: n.d, s: n.s });
   }
   short.sort((a, b) => (b.pv ? 1 : 0) - (a.pv ? 1 : 0) || +new Date(a.e) - +new Date(b.e));
+  const myPools = banners.filter(b => b.game === g.id && +new Date(b.e) > NOW);
+  const livePools = myPools.filter(b => +new Date(b.s) <= NOW);
+  const soonPools = myPools.filter(b => +new Date(b.s) > NOW).sort((a, b) => +new Date(a.s) - +new Date(b.s));
+  const poolSoonNotes = soonPools.map(b => ({
+    t: `${b.chars.join(" / ")} · ${b.pool}`,
+    d: `${fmt(+new Date(b.s))} 开启`,
+    s: '即将开启',
+  }));
   return {
     id: g.id, name: g.name, version: g.version, accent: g.accent, mid: g.mid,
     logo: `assets/logo-${g.id}.webp`,
     events: short.map(toCard),
-    pools: banners
-      .filter(b => b.game === g.id && +new Date(b.e) > NOW)
+    pools: livePools
       .sort((a, b) => +new Date(a.s) - +new Date(b.s))
       .map(b => ({ chars: b.chars, imgs: b.imgs || [], pool: b.pool, s: b.s, e: b.e })),
-    soon: notes,
+    soon: [...poolSoonNotes, ...notes],
     folded: folded.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, why: e.why || '持续整版本', img: e.img || '' })),
     ended: ended.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, img: e.img || '' })),
   };
