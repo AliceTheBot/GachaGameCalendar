@@ -305,6 +305,9 @@ function selectGame(id, scroll=true){
   const onTab=document.querySelector(`.tab[data-id="${current}"]`);
   if(onTab) onTab.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});
   if(scroll) window.scrollTo({top:0,behavior:"smooth"});
+  // 记住当前标签：刷新、从分享链接打开都回到同一个游戏
+  try{ localStorage.setItem("cal.tab", current); }catch(e){}
+  if(location.hash !== "#"+current) history.replaceState(null,"","#"+current);
 }
 
 function step(dir){
@@ -342,6 +345,13 @@ document.addEventListener("keydown",e=>{
 document.documentElement.style.setProperty("--accent",DATA[0].accent);
 render(); tick();
 setInterval(tick,1000);
+
+// 恢复上次停留的游戏：优先 URL 里的 #id，其次 localStorage
+(function restoreTab(){
+  let want="";
+  try{ want = location.hash.slice(1) || localStorage.getItem("cal.tab") || ""; }catch(e){}
+  if(want && DATA.some(g=>g.id===want)) selectGame(want,false);
+})();
 </script>
 </body>
 </html>
