@@ -36,7 +36,7 @@ npm run build
 
 ## 自动更新
 
-`.github/workflows/weekly.yml`：每周五 12:00（北京时间，cron `0 4 * * 5` UTC）自动
+`.github/workflows/update.yml`：每天 05:00（北京时间，cron `0 21 * * *` UTC）自动
 `npm ci` → `node build.mjs` → 提交回仓库；也可以在 Actions 页面手动 `workflow_dispatch`。
 
 ## 部署

@@ -349,7 +349,9 @@ function card(ev){
   const pv = ev.pv ? new Date(ev.pv).getTime() : 0;
   const live = now>=s && now<e, soon = now<s;
   const cls = live?"live":soon?"soon":"done";
-  const label = pv ? "前瞻直播" : live?"进行中":soon?"即将开始":"已结束";
+  const d0=new Date(); d0.setHours(0,0,0,0);
+  const sameDay = s>=+d0 && s<+d0+86400000;
+  const label = pv ? "前瞻直播" : live?"进行中":soon?(sameDay?"今日开始":"即将开始"):"已结束";
   const total=pv?Math.max(1,pv-s):e-s, pct=Math.min(100,Math.max(0,(now-s)/total*100));
   return `<article class="card${pv?" pv":""}" data-s="${s}" data-e="${e}"${pv?` data-pv="${pv}"`:""}>
     <div class="thumb${ev.fit==="contain"?" contain":""}">${ev.img
@@ -359,7 +361,6 @@ function card(ev){
     <div class="body">
       <h3>${ev.t}<span class="state ${cls}">${label}</span></h3>
       ${pv?"":`<div class="range">${fmtRange(ev)}</div>`}
-      ${pv?"":`<p class="desc">${ev.d||""}</p>`}
       <div class="foot">
         <span class="count" data-count="${pv?"pv":live?"end":"start"}" data-t="${pv||(live?e:s)}">${pv?"距开播":live?"剩余":"距开始"} —</span>
       </div>
