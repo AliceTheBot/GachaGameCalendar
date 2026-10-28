@@ -192,11 +192,26 @@ function buildGame(g, allEvents) {
   folded.sort((a, b) => +new Date(a.e) - +new Date(b.e));
   ended.sort((a, b) => +new Date(b.e) - +new Date(a.e));
   const toCard = e => ({ t: e.title, img: e.img || '', s: e.s, e: e.e, d: e.desc || '', fit: e.fit, pos: e.pos, st: e.st });
+  // “其他即将开始”只保留还没进主列表的条目；24 小时内开始且有 iso 的，直接提进主列表
+  const norm = s => String(s).replace(/[\s·「」《》!！:：,，\-—~～]/g, '').toLowerCase();
+  const taken = [...short, ...folded, ...ended].map(e => norm(e.title));
+  const rawNotes = curated.notes.filter(n => n.game === g.id);
+  const notes = [];
+  for (const n of rawNotes) {
+    if (taken.some(t => t.includes(norm(n.t)) || norm(n.t).includes(t))) continue;
+    const start = n.iso ? +new Date(n.iso) : NaN;
+    if (!Number.isNaN(start) && start - NOW < 24 * 3600e3 && start > NOW - 864e5) {
+      short.push({ title: n.t, s: n.iso, e: iso(start + 14 * 864e5), desc: n.s || n.d, img: n.img || '' });
+      continue;
+    }
+    notes.push({ t: n.t, d: n.d, s: n.s });
+  }
+  short.sort((a, b) => +new Date(a.e) - +new Date(b.e));
   return {
     id: g.id, name: g.name, version: g.version, accent: g.accent,
     logo: `assets/logo-${g.id}.webp`,
     events: short.map(toCard),
-    soon: curated.notes.filter(n => n.game === g.id).map(n => ({ t: n.t, d: n.d, s: n.s })),
+    soon: notes,
     folded: folded.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, why: e.why || '持续整版本', img: e.img || '' })),
     ended: ended.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, img: e.img || '' })),
   };

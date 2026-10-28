@@ -144,11 +144,13 @@
 
   footer.src{margin-top:34px;color:#6f778a;font-size:12px;line-height:1.8}
   footer.src a{color:#8b93a8}
+  .foot-date{display:none;color:#6f778a;margin-bottom:6px}
 
   @media (max-width:640px){
     .wrap{padding:14px 14px 44px}
     h1{font-size:17px}
     .top-right{display:none}
+    .foot-date{display:block}
     .grid{grid-template-columns:1fr}
     .note{margin-left:0}
     .tab{padding:7px 12px;font-size:13px}
@@ -176,6 +178,7 @@
   <main id="panels"></main>
 
   <footer class="src">
+    <div class="foot-date">（更新于 __DATE__）</div>
     说明：时间均为游戏服务器时间（UTC+8）。活动配图取自各游戏 B 站官方动态；活动时间以官方动态与版本公告为准。<br />
     榜单由本地页面生成，剩余时间按当前系统时间实时计算。
   </footer>
@@ -186,23 +189,15 @@ const DATA = __DATA__;
 
 const $ = (s,el=document)=>el.querySelector(s);
 
-// 左上角图标：在六个游戏的官方头像之间随机轮换
-(function rotateLogo(){
-  const img = document.getElementById("logoImg");
-  if(!img) return;
-  const srcs = DATA.map(g=>g.logo).filter(Boolean);
-  if(srcs.length < 2) return;
-  let i = Math.floor(Math.random()*srcs.length);
-  img.src = srcs[i];
-  setInterval(()=>{
-    let n = i;
-    while(n === i) n = Math.floor(Math.random()*srcs.length);
-    i = n;
-    img.style.opacity = "0";
-    img.style.transform = "scale(.82)";
-    setTimeout(()=>{ img.src = srcs[i]; img.style.opacity = "1"; img.style.transform = "scale(1)"; }, 300);
-  }, 4000);
-})();
+// 左上角图标：跟随当前选中的游戏
+function setLogo(id){
+  const img=document.getElementById("logoImg"); if(!img) return;
+  const g=DATA.find(x=>x.id===id); if(!g||!g.logo) return;
+  if(img.getAttribute("src")===g.logo) return;
+  img.style.opacity="0";
+  img.style.transform="scale(.82)";
+  setTimeout(()=>{ img.src=g.logo; img.style.opacity="1"; img.style.transform="scale(1)"; },160);
+}
 
 const pad = n=>String(n).padStart(2,"0");
 function fmtRange(ev){
@@ -266,7 +261,7 @@ function render(){
       ${empty}
       <div class="grid">${cards}</div>
       ${soonRows?`<div class="soon-box"><h4>其他即将开始 / 待官宣</h4>${soonRows}</div>`:""}
-      ${folded?`<details class="fold"><summary>持续整版本的活动（已按你的要求从列表剔除，共 ${(g.folded||[]).length} 个）</summary><div class="rows">${folded}</div></details>`:""}
+      ${folded?`<details class="fold"><summary>持续整版本的活动（共 ${(g.folded||[]).length} 个）</summary><div class="rows">${folded}</div></details>`:""}
       ${endedRows?`<details class="fold"><summary>近期已结束（共 ${(g.ended||[]).length} 个）</summary><div class="rows">${endedRows}</div></details>`:""}
     </section>`;
   }).join("");
@@ -302,6 +297,7 @@ function selectGame(id, scroll=true){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.id===current));
   document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.dataset.id===current));
   document.documentElement.style.setProperty("--accent",DATA.find(g=>g.id===current).accent);
+  setLogo(current);
   const onTab=document.querySelector(`.tab[data-id="${current}"]`);
   if(onTab) onTab.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});
   if(scroll) window.scrollTo({top:0,behavior:"smooth"});
@@ -351,6 +347,7 @@ setInterval(tick,1000);
   let want="";
   try{ want = location.hash.slice(1) || localStorage.getItem("cal.tab") || ""; }catch(e){}
   if(want && DATA.some(g=>g.id===want)) selectGame(want,false);
+  else selectGame(DATA[0].id,false);
 })();
 </script>
 </body>
