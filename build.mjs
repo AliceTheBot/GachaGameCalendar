@@ -21,6 +21,8 @@ fs.mkdirSync(ASSETS, { recursive: true });
 const games = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'games.json'), 'utf8'));
 const curated = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'curated.json'), 'utf8'));
 const banners = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'banners.json'), 'utf8'));
+const previewsPath = path.join(DATA_DIR, 'previews.json');
+const previews = fs.existsSync(previewsPath) ? JSON.parse(fs.readFileSync(previewsPath, 'utf8')) : [];
 
 // ---------- 抓取 ----------
 async function fetchPage(mid, offset) {
@@ -189,10 +191,20 @@ function buildGame(g, allEvents) {
       short.push(e);
     }
   }
+  // 前瞻直播：进主列表，直播次日 12:00 后掉进“已结束”
+  for (const pv of previews.filter(p => p.game === g.id)) {
+    const t = +new Date(pv.iso);
+    if (Number.isNaN(t)) continue;
+    const s0 = t - 3 * 864e5;
+    const e0 = (() => { const off = 8 * 3600e3; const d = Math.floor((t + off) / 864e5); return (d + 1) * 864e5 + 4 * 3600e3 - off; })();
+    const ev = { title: pv.title, s: iso(s0), e: iso(e0), desc: pv.desc || '', img: pv.img || '', pv: iso(t) };
+    if (NOW < e0) short.push(ev);
+    else if (e0 > NOW - 21 * 864e5) ended.push(ev);
+  }
   short.sort((a, b) => +new Date(a.e) - +new Date(b.e));
   folded.sort((a, b) => +new Date(a.e) - +new Date(b.e));
   ended.sort((a, b) => +new Date(b.e) - +new Date(a.e));
-  const toCard = e => ({ t: e.title, img: e.img || '', s: e.s, e: e.e, d: e.desc || '', fit: e.fit, pos: e.pos, st: e.st });
+  const toCard = e => ({ t: e.title, img: e.img || '', s: e.s, e: e.e, d: e.desc || '', fit: e.fit, pos: e.pos, st: e.st, pv: e.pv });
   // “其他即将开始”只保留还没进主列表的条目；24 小时内开始且有 iso 的，直接提进主列表
   const norm = s => String(s).replace(/[\s·「」《》!！:：,，\-—~～]/g, '').toLowerCase();
   const taken = [...short, ...folded, ...ended].map(e => norm(e.title));

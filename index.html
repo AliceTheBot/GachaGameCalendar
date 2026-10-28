@@ -116,8 +116,6 @@
   }
   .tab.on .n{background:rgba(0,0,0,.18);color:#12141a}
 
-  .swipe-hint{display:none;font-size:12px;color:#6f778a;margin:0 0 12px;letter-spacing:.5px}
-  @media (pointer:coarse){ .swipe-hint{display:block} }
 
   .panel{display:none;animation:fade .25s ease}
   .panel.on{display:block}
@@ -268,7 +266,6 @@
   </header>
 
   <nav class="tabs" id="tabs"></nav>
-  <div class="swipe-hint">← 左右滑动 / 方向键切换游戏 →</div>
   <main id="panels"></main>
 
   <footer class="src">
@@ -311,11 +308,12 @@ let current = DATA[0].id;
 
 function card(ev){
   const now=Date.now(), s=new Date(ev.s).getTime(), e=new Date(ev.e).getTime();
+  const pv = ev.pv ? new Date(ev.pv).getTime() : 0;
   const live = now>=s && now<e, soon = now<s;
   const cls = live?"live":soon?"soon":"done";
-  const label = live?"进行中":soon?"即将开始":"已结束";
-  const total=e-s, pct=Math.min(100,Math.max(0,(now-s)/total*100));
-  return `<article class="card" data-s="${s}" data-e="${e}">
+  const label = pv ? "前瞻直播" : live?"进行中":soon?"即将开始":"已结束";
+  const total=pv?Math.max(1,pv-s):e-s, pct=Math.min(100,Math.max(0,(now-s)/total*100));
+  return `<article class="card" data-s="${s}" data-e="${e}"${pv?` data-pv="${pv}"`:""}>
     <div class="thumb${ev.fit==="contain"?" contain":""}"><img src="${ev.img}" alt="${ev.t}" loading="lazy"${ev.pos?` style="object-position:${ev.pos}"`:""}>
       <span class="state ${cls}">${label}</span></div>
     <div class="body">
@@ -323,7 +321,7 @@ function card(ev){
       <div class="range">${fmtRange(ev)}</div>
       <p class="desc">${ev.d||""}</p>
       <div class="foot">
-        <span class="count" data-count="${live?"end":"start"}" data-t="${live?e:s}">${live?"剩余":"距开始"} —</span>
+        <span class="count" data-count="${pv?"pv":live?"end":"start"}" data-t="${pv||(live?e:s)}">${pv?"距开播":live?"剩余":"距开始"} —</span>
         <span class="pct">${live?Math.round(pct)+"%":""}</span>
       </div>
       <div class="bar"><i style="width:${live?pct:0}%"></i></div>
@@ -380,7 +378,6 @@ function render(){
     return `<section class="panel${g.id===current?" on":""}" data-id="${g.id}" style="--accent:${g.accent}">
       <div class="panel-head">
         <h2>${g.name}</h2><span class="ver">${g.version}</span>
-        <span class="note">${live.length} 个进行中${soon.length?` · ${soon.length} 个即将开始`:""}</span>
       </div>
       ${empty}
       <div class="grid">${cards}</div>
@@ -394,8 +391,9 @@ function render(){
 
 function tick(){
   document.querySelectorAll("[data-count]").forEach(el=>{
-    const t=+el.dataset.t, ms=t-Date.now();
-    el.innerHTML = `<small>${el.dataset.count==="end"?"剩余":"距开始"}</small>${remain(Math.max(0,ms))}`;
+    const t=+el.dataset.t, ms=t-Date.now(), k=el.dataset.count;
+    const pre=k==="end"?"剩余":k==="pv"?"距开播":"距开始";
+    el.innerHTML = `<small>${pre}</small>${remain(Math.max(0,ms))}`;
   });
   document.querySelectorAll(".pool[data-s]").forEach(p=>{
     const now=Date.now(), s=+p.dataset.s, e=+p.dataset.e;
@@ -404,10 +402,12 @@ function tick(){
   });
   document.querySelectorAll(".card").forEach(c=>{
     const now=Date.now(), s=+c.dataset.s, e=+c.dataset.e;
+    const pvT=c.dataset.pv?+c.dataset.pv:0;
     const i=$(".bar i",c); if(!i) return;
-    const pct=Math.min(100,Math.max(0,(now-s)/(e-s)*100));
+    const endT=pvT||e;
+    const pct=Math.min(100,Math.max(0,(now-s)/(endT-s)*100));
     i.style.width=pct+"%";
-    const p=$(".pct",c); if(p&&now<s) p.textContent="";
+    const p=$(".pct",c); if(p) p.textContent=now>=s?Math.round(pct)+"%":"";
   });
 }
 
