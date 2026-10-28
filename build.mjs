@@ -72,8 +72,8 @@ async function loadPosts(game) {
 }
 
 // ---------- 解析 ----------
-const DATE = /(\d{4})\s*[年\/.]\s*(\d{1,2})\s*[月\/.]\s*(\d{1,2})\s*日?\s*(\d{1,2})\s*[:：]\s*(\d{2})/g;
-const NOYEAR = /(\d{1,2})\s*月\s*(\d{1,2})\s*日?\s*(\d{1,2})\s*[:：]\s*(\d{2})/g;
+const DATE = /(\d{4})\s*[年\/.]\s*(\d{1,2})\s*[月\/.]\s*(\d{1,2})\s*日?[^0-9]{0,12}(\d{1,2})\s*[:：]\s*(\d{2})/g;
+const NOYEAR = /(\d{1,2})\s*月\s*(\d{1,2})\s*日?[^0-9]{0,12}(\d{1,2})\s*[:：]\s*(\d{2})/g;
 
 function datesIn(text) {
   const out = [];
@@ -149,8 +149,39 @@ function discover(items, game, existing) {
   return added;
 }
 
-async function saveCover(ev) {
-  const hash = crypto.createHash('sha1').update(ev.opus + ev.title).digest('hex').slice(0, 8);
+// 前瞻特别节目：正文同时出现“前瞻/特别节目”和“播出/开播”，且带未来时间
+const PV_TEXT = /前瞻|特别节目/;
+const PV_WHEN = /播出|开播|直播|举行/;
+function findPreview(it, game) {
+  const text = (it.text || '').replace(/\n/g, ' ');
+  if (!PV_TEXT.test(text) || !PV_WHEN.test(text)) return null;
+  if (/回顾|现已结束|已结束|情报汇总/.test(text)) return null;
+  const ts = datesIn(text).map(d => d.iso).filter(t => t > NOW - 3600e3).sort((a, b) => a - b)[0];
+  if (!ts || ts > NOW + 45 * 864e5) return null;
+  const ver = text.match(/(\d+\.\d+)\s*版本/);
+  const title = `${game.name}${ver ? ' ' + ver[1] + ' 版本' : ''}前瞻特别节目`;
+  return { game: game.id, title, iso: new Date(ts).toISOString(), desc: '官方前瞻特别节目，直播结束后整理情报。', cover: it.cover, opus: it.opus };
+}
+
+async function saveWide(ev) {
+  const hash = crypto.createHash('sha1').update('pv' + ev.opus + ev.title).digest('hex').slice(0, 8);
+  const file = `pv-${ev.game}-${hash}.webp`;
+  const dest = path.join(ASSETS, file);
+  if (fs.existsSync(dest)) return 'assets/' + file;
+  try {
+    const r = await fetch(ev.cover, { headers: { 'User-Agent': UA, Referer: 'https://www.bilibili.com/' }, signal: AbortSignal.timeout(20000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const buf = Buffer.from(await r.arrayBuffer());
+    const out = await sharp(buf).resize(1200, 675, { fit: 'cover', position: 'attention' }).webp({ quality: 86 }).toBuffer();
+    fs.writeFileSync(dest, out);
+    return 'assets/' + file;
+  } catch (e) {
+    console.warn('  前瞻封面下载失败', ev.title, e.message);
+    return '';
+  }
+}
+
+async function saveCover(ev) {  const hash = crypto.createHash('sha1').update(ev.opus + ev.title).digest('hex').slice(0, 8);
   const file = `auto-${ev.game}-${hash}.webp`;
   const dest = path.join(ASSETS, file);
   if (fs.existsSync(dest)) return 'assets/' + file;
@@ -201,7 +232,7 @@ function buildGame(g, allEvents) {
     if (NOW < e0) short.push(ev);
     else if (e0 > NOW - 21 * 864e5) ended.push(ev);
   }
-  short.sort((a, b) => +new Date(a.e) - +new Date(b.e));
+  short.sort((a, b) => (b.pv ? 1 : 0) - (a.pv ? 1 : 0) || +new Date(a.e) - +new Date(b.e));
   folded.sort((a, b) => +new Date(a.e) - +new Date(b.e));
   ended.sort((a, b) => +new Date(b.e) - +new Date(a.e));
   const toCard = e => ({ t: e.title, img: e.img || '', s: e.s, e: e.e, d: e.desc || '', fit: e.fit, pos: e.pos, st: e.st, pv: e.pv });
@@ -219,7 +250,7 @@ function buildGame(g, allEvents) {
     }
     notes.push({ t: n.t, d: n.d, s: n.s });
   }
-  short.sort((a, b) => +new Date(a.e) - +new Date(b.e));
+  short.sort((a, b) => (b.pv ? 1 : 0) - (a.pv ? 1 : 0) || +new Date(a.e) - +new Date(b.e));
   return {
     id: g.id, name: g.name, version: g.version, accent: g.accent, mid: g.mid,
     logo: `assets/logo-${g.id}.webp`,
@@ -237,6 +268,7 @@ function buildGame(g, allEvents) {
 // ---------- 主流程 ----------
 console.log('抓取官方动态…');
 const allEvents = curated.events.slice();
+const autoPreviews = [];
 if (DISCOVER) {
   for (const g of games) {
     const items = await loadPosts(g);
@@ -249,7 +281,22 @@ if (DISCOVER) {
       allEvents.push(ev);
       console.log(`  + 新活动 ${g.name}：${ev.title}（${fmt(+new Date(ev.s))} – ${fmt(+new Date(ev.e))}）`);
     }
+    for (const it of items) {
+      const pv = findPreview(it, g);
+      if (pv) autoPreviews.push(pv);
+    }
   }
+}
+
+// 前瞻：自动识别 + 手动补录（同一天同游戏只保留一条，手动优先）
+const seenPv = new Set(previews.map(p => p.game + String(p.iso).slice(0, 10)));
+for (const p of autoPreviews) {
+  const k = p.game + p.iso.slice(0, 10);
+  if (seenPv.has(k)) continue;
+  seenPv.add(k);
+  p.img = await saveWide(p);
+  previews.push(p);
+  console.log(`  + 前瞻 ${p.title}（${fmt(+new Date(p.iso))}）`);
 }
 
 const data = games.map(g => buildGame(g, allEvents));

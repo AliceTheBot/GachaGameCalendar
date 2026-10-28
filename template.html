@@ -132,6 +132,12 @@
     overflow:hidden;display:flex;flex-direction:column;
     transition:transform .18s,border-color .18s,box-shadow .18s;
   }
+  article.card.pv{
+    border-color:color-mix(in srgb,var(--accent) 60%, transparent);
+    box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 25%, transparent),0 12px 34px rgba(0,0,0,.28);
+  }
+  article.card.pv .count{color:var(--accent);font-weight:600;letter-spacing:.3px}
+  article.card.pv .range{color:var(--accent)}
   article.card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 45%, transparent);
     box-shadow:var(--shadow)}
   .thumb{position:relative;background:#0e1017;line-height:0;aspect-ratio:16/9;overflow:hidden}
@@ -295,6 +301,7 @@ function setLogo(id){
 const pad = n=>String(n).padStart(2,"0");
 function fmtRange(ev){
   const f = iso=>{const d=new Date(iso);return `${d.getMonth()+1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+  if(ev.pv) return `直播 ${f(ev.pv)} · 次日晚归档`;
   return `${ev.st || f(ev.s)} – ${f(ev.e)}`;
 }
 function remain(ms){
@@ -313,7 +320,7 @@ function card(ev){
   const cls = live?"live":soon?"soon":"done";
   const label = pv ? "前瞻直播" : live?"进行中":soon?"即将开始":"已结束";
   const total=pv?Math.max(1,pv-s):e-s, pct=Math.min(100,Math.max(0,(now-s)/total*100));
-  return `<article class="card" data-s="${s}" data-e="${e}"${pv?` data-pv="${pv}"`:""}>
+  return `<article class="card${pv?" pv":""}" data-s="${s}" data-e="${e}"${pv?` data-pv="${pv}"`:""}>
     <div class="thumb${ev.fit==="contain"?" contain":""}"><img src="${ev.img}" alt="${ev.t}" loading="lazy"${ev.pos?` style="object-position:${ev.pos}"`:""}>
       <span class="state ${cls}">${label}</span></div>
     <div class="body">
@@ -324,7 +331,7 @@ function card(ev){
         <span class="count" data-count="${pv?"pv":live?"end":"start"}" data-t="${pv||(live?e:s)}">${pv?"距开播":live?"剩余":"距开始"} —</span>
         <span class="pct">${live?Math.round(pct)+"%":""}</span>
       </div>
-      <div class="bar"><i style="width:${live?pct:0}%"></i></div>
+      <div class="bar"><i style="width:${(pv?now>=s:live)?pct:0}%"></i></div>
     </div>
   </article>`;
 }
