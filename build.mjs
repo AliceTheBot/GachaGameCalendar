@@ -20,6 +20,7 @@ fs.mkdirSync(ASSETS, { recursive: true });
 
 const games = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'games.json'), 'utf8'));
 const curated = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'curated.json'), 'utf8'));
+const banners = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'banners.json'), 'utf8'));
 
 // ---------- 抓取 ----------
 async function fetchPage(mid, offset) {
@@ -211,6 +212,10 @@ function buildGame(g, allEvents) {
     id: g.id, name: g.name, version: g.version, accent: g.accent,
     logo: `assets/logo-${g.id}.webp`,
     events: short.map(toCard),
+    pools: banners
+      .filter(b => b.game === g.id && +new Date(b.e) > NOW)
+      .sort((a, b) => +new Date(a.s) - +new Date(b.s))
+      .map(b => ({ chars: b.chars, pool: b.pool, s: b.s, e: b.e })),
     soon: notes,
     folded: folded.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, why: e.why || '持续整版本', img: e.img || '' })),
     ended: ended.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, img: e.img || '' })),
