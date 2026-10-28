@@ -150,7 +150,7 @@ function discover(items, game, existing) {
 }
 
 // 前瞻特别节目：正文同时出现“前瞻/特别节目”和“播出/开播”，且带未来时间
-const PV_TEXT = /前瞻|特别节目/;
+const PV_TEXT = /前瞻|特别节目|直播首秀|版本直播/;
 const PV_WHEN = /播出|开播|直播|举行/;
 function findPreview(it, game) {
   const text = (it.text || '').replace(/\n/g, ' ');
@@ -232,7 +232,7 @@ function buildGame(g, allEvents) {
     if (NOW < e0) short.push(ev);
     else if (e0 > NOW - 21 * 864e5) ended.push(ev);
   }
-  short.sort((a, b) => (b.pv ? 1 : 0) - (a.pv ? 1 : 0) || +new Date(a.e) - +new Date(b.e));
+  short.sort((a, b) => (b.pv ? 1 : 0) - (a.pv ? 1 : 0) || +new Date(b.s) - +new Date(a.s));
   folded.sort((a, b) => +new Date(a.e) - +new Date(b.e));
   ended.sort((a, b) => +new Date(b.e) - +new Date(a.e));
   const toCard = e => ({ t: e.title, img: e.img || '', s: e.s, e: e.e, d: e.desc || '', fit: e.fit, pos: e.pos, st: e.st, pv: e.pv });
@@ -250,7 +250,7 @@ function buildGame(g, allEvents) {
     }
     notes.push({ t: n.t, d: n.d, s: n.s });
   }
-  short.sort((a, b) => (b.pv ? 1 : 0) - (a.pv ? 1 : 0) || +new Date(a.e) - +new Date(b.e));
+  short.sort((a, b) => (b.pv ? 1 : 0) - (a.pv ? 1 : 0) || +new Date(b.s) - +new Date(a.s));
   const myPools = banners.filter(b => b.game === g.id && +new Date(b.e) > NOW);
   const livePools = myPools.filter(b => +new Date(b.s) <= NOW);
   const soonPools = myPools.filter(b => +new Date(b.s) > NOW).sort((a, b) => +new Date(a.s) - +new Date(b.s));

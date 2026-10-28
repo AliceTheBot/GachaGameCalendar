@@ -170,6 +170,8 @@
   .foot{margin-top:auto;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .count{font-size:13px;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums}
   .count small{font-size:11px;color:var(--dim);font-weight:400;margin-right:4px}
+  .count.urgent,.count.urgent small{color:#ff5f5f}
+  .count .warn{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:4px;font-size:10.5px;font-style:normal;font-weight:600;color:#fff;background:#e03b3b;vertical-align:1px}
   .pct{font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums}
   .bar{height:4px;border-radius:4px;background:var(--chip2);overflow:hidden;margin-top:2px}
   .bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 45%, #8ea2ff))}
@@ -200,20 +202,22 @@
   .row .time{color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
   .row .why{color:#7f889c;font-size:11.5px;margin-left:auto}
 
-  .pool-wrap{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+  .pool-wrap{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px}
   .pool{
-    display:flex;gap:14px;align-items:center;border-radius:14px;padding:12px;
-    border:1px solid color-mix(in srgb,var(--accent) 30%, var(--line));
-    background:linear-gradient(100deg, color-mix(in srgb,var(--accent) 10%, var(--card)), var(--card) 65%);
+    flex:1 1 340px;max-width:640px;position:relative;overflow:hidden;display:flex;gap:14px;align-items:center;border-radius:14px;padding:12px 12px 12px 16px;
+    border:1px solid color-mix(in srgb,var(--accent) 68%, var(--line));
+    background:linear-gradient(100deg, color-mix(in srgb,var(--accent) 30%, var(--card)), var(--card) 74%);
+    box-shadow:0 12px 34px -22px color-mix(in srgb,var(--accent) 90%, transparent);
   }
+  .pool::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:.9}
+  .pool .pool-tag{background:color-mix(in srgb,var(--accent) 26%, transparent);border-color:color-mix(in srgb,var(--accent) 45%, transparent)}
   .pool.soon{border-style:dashed;background:var(--card)}
   .pool-media{
     position:relative;flex:none;width:min(38%,200px);aspect-ratio:16/9;
     border-radius:10px;overflow:hidden;background:var(--chip2);border:1px solid var(--line);
   }
-  .pool-slides{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
-  .pool-slides::-webkit-scrollbar{display:none}
-  .pool-slide{flex:0 0 100%;height:100%;scroll-snap-align:center;position:relative}
+  .pool-slides{display:flex;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1);will-change:transform}
+  .pool-slide{flex:0 0 100%;height:100%;position:relative}
   .pool-slide img{width:100%;height:100%;object-fit:cover;display:block}
   .pool-slide .ph{
     width:100%;height:100%;display:grid;place-items:center;font-size:15px;font-weight:700;letter-spacing:1px;
@@ -253,6 +257,8 @@
   .foot-date{display:none;color:#6f778a;margin-bottom:6px}
 
   @media (max-width:640px){
+    .grid{grid-template-columns:minmax(0,1fr)}
+    .card,.pool,.pool-wrap,.panel{min-width:0}
     .wrap{padding:14px 14px 44px}
     h1{font-size:17px}
     .top-right{gap:6px}
@@ -265,6 +271,8 @@
     .pool-media{width:100%}
     nav.tabs{gap:6px;padding:8px 0}
   }
+  html,body{max-width:100%;overflow-x:hidden}
+  main,.panel,.grid>*{min-width:0}
 </style>
 </head>
 <body>
@@ -293,7 +301,7 @@
 </div>
 
 <script>
-const DATA = [{"id":"genshin","name":"原神","version":"7.1「往冥府的安魂歌」","accent":"#e8c37a","mid":401742377,"logo":"assets/logo-genshin.webp","events":[{"t":"祝圣移涌","img":"assets/genshin-01.webp","s":"2026-10-26T04:00:00+08:00","e":"2026-11-02T03:59:00+08:00","d":"圣遗物秘境双倍掉落，趁着长草期补一补词条。"},{"t":"无忧无虑大雪仗","img":"assets/genshin-02.webp","s":"2026-10-21T10:00:00+08:00","e":"2026-11-02T03:59:00+08:00","d":"雪球投掷挑战，累计「雪球欢意」领取原石与养成材料。"}],"pools":[{"chars":["丝柯克","爱可菲"],"imgs":["assets/pool-genshin-0-0.webp","assets/pool-genshin-0-1.webp"],"pool":"「凝冰」角色活动祈愿 第二期","s":"2026-10-13T18:00:00+08:00","e":"2026-11-03T14:59:00+08:00"}],"soon":[],"folded":[{"n":"幽境危战","time":"9/30 10:00 – 11/03 03:59","why":"跨大半版本","img":"assets/genshin-05.webp"},{"n":"绮星盛会","time":"10/01 12:00 – 11/03 04:00","why":"持续整版本","img":"assets/genshin-03.webp"},{"n":"桌上剧团·冒险的前夜会","time":"9/23 06:00 – 11/03 14:59","why":"版本主线活动","img":"assets/genshin-06.webp"},{"n":"巡历雪境","time":"9/23 06:00 – 11/03 14:59","why":"版本活动","img":"assets/genshin-07.webp"},{"n":"虹旅藏金","time":"9/23 06:00 – 11/03 14:59","why":"周年登录福利","img":"assets/genshin-08.webp"},{"n":"绮衣珍赏·晴暖","time":"9/23 06:00 – 11/04 05:59","why":"持续整版本","img":"assets/genshin-04.webp"}],"ended":[{"n":"七圣召唤 热斗·自行巧局","time":"10/10 10:00 – 10/26 03:59","img":"assets/genshin-09.webp"},{"n":"判测胜券本征","time":"10/12 10:00 – 10/20 03:59","img":"assets/genshin-10.webp"}]},{"id":"starrail","name":"星穹铁道","version":"4.6「月升之前，与兽共舞」","accent":"#9b8cff","mid":1340190821,"logo":"assets/logo-starrail.webp","events":[{"t":"星际和平盛典：一镜到底","img":"assets/starrail-11.webp","s":"2026-10-21T12:00:00+08:00","e":"2026-11-11T03:59:00+08:00","d":"大型影视真人秀玩法，完成试镜挑战领取星琼、养成材料。","pos":"center 70%"}],"pools":[{"chars":["真珠","千冶·刃"],"imgs":["assets/pool-starrail-1-0.webp","assets/pool-starrail-1-1.webp"],"pool":"4.6 活动跃迁 · 其二（真珠 9/28 起 / 千冶·刃 10/21 起）","s":"2026-09-28T11:00:00+08:00","e":"2026-11-10T15:00:00+08:00"}],"soon":[],"folded":[{"n":"爱，幽灵与机器人","time":"9/28 10:00 – 11/11 03:59","why":"整版本主线活动","img":"assets/starrail-12.webp"},{"n":"星际碰碰好搭档","time":"9/28 10:00 – 11/11 03:59","why":"常驻玩法","img":"assets/starrail-14.webp"},{"n":"巡星之礼（7 日签到）","time":"9/28 10:00 – 11/11 03:59","why":"整版本登录福利","img":"assets/starrail-16.webp"},{"n":"镇伏「贪饕」，汇聚愿力","time":"9/28 10:00 – 11/11 06:00","why":"整版本","img":"assets/starrail-13.webp"},{"n":"「星际幻宠」乐园","time":"9/28 10:00 – 11/11 06:00","why":"整版本","img":"assets/starrail-15.webp"}],"ended":[{"n":"位面分裂","time":"10/12 04:00 – 10/25 03:59","img":"assets/starrail-17.webp"}]},{"id":"zzz","name":"绝区零","version":"3.3「重返天空的旅程」","accent":"#ffd23f","mid":1636034895,"logo":"assets/logo-zzz.webp","events":[{"t":"赛博圣手，出诊！","img":"assets/zzz-18.webp","s":"2026-10-28T10:00:00+08:00","e":"2026-11-16T03:59:00+08:00","d":"帮小邦布修 bug：逐日解锁维修关卡，领菲林与邦布券。"}],"pools":[{"chars":["菲欧妮","维琳娜"],"imgs":["assets/pool-zzz-2-0.webp","assets/pool-zzz-2-1.webp"],"pool":"3.3 限定调频（维琳娜为复刻）","s":"2026-10-21T10:00:00+08:00","e":"2026-11-11T05:59:00+08:00"}],"soon":[],"folded":[{"n":"怪奇诡屋惊魂记","time":"10/22 10:00 – 11/30 03:59","why":"版本主题活动（39 天）","img":"assets/zzz-19.webp"},{"n":"全新放送","time":"10/21 10:00 – 12/01 03:59","why":"整版本登录福利","img":"assets/zzz-20.webp"},{"n":"丽都城募","time":"10/21 10:00 – 12/01 03:59","why":"战令","img":"assets/zzz-21.webp"}],"ended":[{"n":"数据悬赏-实战模拟","time":"10/14 04:00 – 10/19 03:59","img":"assets/zzz-22.webp"},{"n":"跛脚乌鸦奇探录","time":"10/03 10:00 – 10/19 03:59","img":"assets/zzz-23.webp"}]},{"id":"wuwa","name":"鸣潮","version":"3.7「镜锁妄世，心照红尘」","accent":"#59d6e0","mid":1955897084,"logo":"assets/logo-wuwa.webp","events":[{"t":"朝月鱼涌","img":"assets/wuwa-26.webp","s":"2026-10-15T10:00:00+08:00","e":"2026-11-01T09:59:00+08:00","d":"网页钓鱼活动：解锁鱼群图鉴，领星声、贝币与密音筒。"},{"t":"无音消除","img":"assets/wuwa-25.webp","s":"2026-10-22T10:00:00+08:00","e":"2026-11-09T03:59:00+08:00","d":"声骸棋子消除玩法，轻松拿星声与养成材料。"},{"t":"凭栏听雨之礼","img":"assets/wuwa-24.webp","s":"2026-10-22T10:00:00+08:00","e":"2026-11-11T03:59:00+08:00","d":"限时累计签到，最多领浮金波纹 ×10。"}],"pools":[{"chars":["锁暝"],"imgs":["assets/pool-wuwa-3-0.webp"],"pool":"「余心所向九死未悔」角色活动唤取（同期另有「显影于明日」「非定义光谱」）","s":"2026-10-22T10:00:00+08:00","e":"2026-11-11T11:59:00+08:00"}],"soon":[{"t":"踏潮探历·玄方地界","d":"10/29 04:00 开启","s":"限时探索委托，每日消耗「探历札记」领补给"}],"folded":[{"n":"梦构匣中","time":"9/30 10:00 – 11/11 03:59","why":"整版本区域探索","img":"assets/wuwa-28.webp"},{"n":"朝月赠礼","time":"9/30 10:00 – 11/11 03:59","why":"整版本签到","img":"assets/wuwa-29.webp"},{"n":"团团勇者大乱斗","time":"9/30 10:00 – 11/11 11:59","why":"整版本","img":"assets/wuwa-27.webp"},{"n":"索拉里斯回归邀约","time":"9/30 10:00 – 11/11 23:59","why":"整版本回归福利","img":"assets/wuwa-30.webp"}],"ended":[{"n":"天工寻物","time":"10/08 04:00 – 10/26 03:59","img":"assets/wuwa-31.webp"},{"n":"回音盈域","time":"10/15 04:00 – 10/22 03:59","img":"assets/wuwa-32.webp"}]},{"id":"endfield","name":"终末地","version":"「丹青渡」","accent":"#7fc9a6","mid":1265652806,"logo":"assets/logo-endfield.webp","events":[{"t":"卡莉的芳菲童话","img":"assets/endfield-33.webp","s":"2026-10-22T12:00:00+08:00","e":"2026-11-05T04:00:00+08:00","d":"拍照活动：7 个拍照任务逐日解锁，累计领嵌晶玉 ×1500 与头像框。"},{"t":"危机筹备","img":"assets/auto-endfield-3ed008d4.webp","s":"2026-10-28T20:00:00.000Z","e":"2026-11-04T20:00:00.000Z","d":"由官方动态自动收录，可补充说明。"}],"pools":[{"chars":["祀"],"imgs":["assets/pool-endfield-4-0.webp"],"pool":"「万物更新」特许寻访","s":"2026-10-15T10:00:00+08:00","e":"2026-11-05T11:59:00+08:00"}],"soon":[{"t":"汤汤 · 「祖泉的新流」重构寻访","d":"10/29 12:00 开启","s":"即将开启"}],"folded":[{"n":"万物有灵（7 日签到）","time":"10/15 12:00 – 11/05 11:59","why":"版本签到福利","img":"assets/endfield-36.webp"},{"n":"烟火生缘","time":"10/15 12:00 – 11/05 12:00","why":"整版本经营活动","img":"assets/endfield-34.webp"},{"n":"墨分诸彩","time":"10/15 12:00 – 11/05 12:00","why":"版本引入活动","img":"assets/endfield-35.webp"}],"ended":[]},{"id":"nte","name":"异环","version":"1.4「祷歌为谁而诵」","accent":"#7ec8ff","mid":3546636978489848,"logo":"assets/logo-nte.webp","events":[{"t":"澄明环线","img":"assets/nte-chengming.webp","s":"2026-10-16T10:00:00+08:00","e":"2026-10-30T03:59:00+08:00","d":"轨外之境特别路线，沿澄明环线收集奇遇印记兑换奖励。"},{"t":"夺宝大作战","img":"assets/nte-duobao.webp","s":"2026-10-19T10:00:00+08:00","e":"2026-11-02T03:59:00+08:00","d":"限时夺宝挑战，累计积分兑换养成材料与方斯。"},{"t":"噗卡翻翻乐","img":"assets/nte-puka.webp","s":"2026-10-23T10:00:00+08:00","e":"2026-11-05T03:59:00+08:00","d":"完成每日任务获得翻牌次数，翻开图案领取奖励。"},{"t":"飞芒环线","img":"assets/nte-feilu.webp","s":"2026-10-30T10:00:00+08:00","e":"2026-11-13T03:59:00+08:00","d":"轨外之境新路线「飞芒环线」，10/30 开启。"}],"pools":[{"chars":["明音凛"],"imgs":["assets/pool-nte-6-0.webp"],"pool":"「灿烂的星」限定棋盘","s":"2026-10-15T10:00:00+08:00","e":"2026-11-05T05:59:00+08:00"}],"soon":[{"t":"异环×炫迈联名","d":"10/30 起","s":"联名产品与主题周边线上多平台开售"}],"folded":[{"n":"Porsche 联动盲盒「骏影疾驰」","time":"9/24 10:00 – 11/05 05:59","why":"持续整版本","img":"assets/nte-porsche.webp"}],"ended":[]}];
+const DATA = [{"id":"genshin","name":"原神","version":"7.1「往冥府的安魂歌」","accent":"#e8c37a","mid":401742377,"logo":"assets/logo-genshin.webp","events":[{"t":"祝圣移涌","img":"assets/genshin-01.webp","s":"2026-10-26T04:00:00+08:00","e":"2026-11-02T03:59:00+08:00","d":"圣遗物秘境双倍掉落，趁着长草期补一补词条。"},{"t":"无忧无虑大雪仗","img":"assets/genshin-02.webp","s":"2026-10-21T10:00:00+08:00","e":"2026-11-02T03:59:00+08:00","d":"雪球投掷挑战，累计「雪球欢意」领取原石与养成材料。"}],"pools":[{"chars":["丝柯克","爱可菲"],"imgs":["assets/pool-genshin-0-0.webp","assets/pool-genshin-0-1.webp"],"pool":"「凝冰」角色活动祈愿 第二期","s":"2026-10-13T18:00:00+08:00","e":"2026-11-03T14:59:00+08:00"}],"soon":[],"folded":[{"n":"幽境危战","time":"9/30 10:00 – 11/03 03:59","why":"跨大半版本","img":"assets/genshin-05.webp"},{"n":"绮星盛会","time":"10/01 12:00 – 11/03 04:00","why":"持续整版本","img":"assets/genshin-03.webp"},{"n":"桌上剧团·冒险的前夜会","time":"9/23 06:00 – 11/03 14:59","why":"版本主线活动","img":"assets/genshin-06.webp"},{"n":"巡历雪境","time":"9/23 06:00 – 11/03 14:59","why":"版本活动","img":"assets/genshin-07.webp"},{"n":"虹旅藏金","time":"9/23 06:00 – 11/03 14:59","why":"周年登录福利","img":"assets/genshin-08.webp"},{"n":"绮衣珍赏·晴暖","time":"9/23 06:00 – 11/04 05:59","why":"持续整版本","img":"assets/genshin-04.webp"}],"ended":[{"n":"七圣召唤 热斗·自行巧局","time":"10/10 10:00 – 10/26 03:59","img":"assets/genshin-09.webp"},{"n":"判测胜券本征","time":"10/12 10:00 – 10/20 03:59","img":"assets/genshin-10.webp"}]},{"id":"starrail","name":"星穹铁道","version":"4.6「月升之前，与兽共舞」","accent":"#9b8cff","mid":1340190821,"logo":"assets/logo-starrail.webp","events":[{"t":"星穹铁道 4.7 版本前瞻《阿哈之夜》","img":"assets/pv-starrail-aha.webp","s":"2026-10-27T11:30:00.000Z","e":"2026-10-30T20:00:00.000Z","d":"乐子神的直播首秀：新版本情报与前瞻福利，10/30 19:30 官方直播间。","pv":"2026-10-30T11:30:00.000Z"},{"t":"星际和平盛典：一镜到底","img":"assets/starrail-11.webp","s":"2026-10-21T12:00:00+08:00","e":"2026-11-11T03:59:00+08:00","d":"大型影视真人秀玩法，完成试镜挑战领取星琼、养成材料。","pos":"center 70%"}],"pools":[{"chars":["真珠","千冶·刃"],"imgs":["assets/pool-starrail-1-0.webp","assets/pool-starrail-1-1.webp"],"pool":"4.6 活动跃迁 · 其二（真珠 9/28 起 / 千冶·刃 10/21 起）","s":"2026-09-28T11:00:00+08:00","e":"2026-11-10T15:00:00+08:00"}],"soon":[],"folded":[{"n":"爱，幽灵与机器人","time":"9/28 10:00 – 11/11 03:59","why":"整版本主线活动","img":"assets/starrail-12.webp"},{"n":"星际碰碰好搭档","time":"9/28 10:00 – 11/11 03:59","why":"常驻玩法","img":"assets/starrail-14.webp"},{"n":"巡星之礼（7 日签到）","time":"9/28 10:00 – 11/11 03:59","why":"整版本登录福利","img":"assets/starrail-16.webp"},{"n":"镇伏「贪饕」，汇聚愿力","time":"9/28 10:00 – 11/11 06:00","why":"整版本","img":"assets/starrail-13.webp"},{"n":"「星际幻宠」乐园","time":"9/28 10:00 – 11/11 06:00","why":"整版本","img":"assets/starrail-15.webp"}],"ended":[{"n":"位面分裂","time":"10/12 04:00 – 10/25 03:59","img":"assets/starrail-17.webp"}]},{"id":"zzz","name":"绝区零","version":"3.3「重返天空的旅程」","accent":"#ffd23f","mid":1636034895,"logo":"assets/logo-zzz.webp","events":[{"t":"赛博圣手，出诊！","img":"assets/zzz-18.webp","s":"2026-10-28T10:00:00+08:00","e":"2026-11-16T03:59:00+08:00","d":"帮小邦布修 bug：逐日解锁维修关卡，领菲林与邦布券。"}],"pools":[{"chars":["菲欧妮","维琳娜"],"imgs":["assets/pool-zzz-2-0.webp","assets/pool-zzz-2-1.webp"],"pool":"3.3 限定调频（维琳娜为复刻）","s":"2026-10-21T10:00:00+08:00","e":"2026-11-11T05:59:00+08:00"}],"soon":[],"folded":[{"n":"怪奇诡屋惊魂记","time":"10/22 10:00 – 11/30 03:59","why":"版本主题活动（39 天）","img":"assets/zzz-19.webp"},{"n":"全新放送","time":"10/21 10:00 – 12/01 03:59","why":"整版本登录福利","img":"assets/zzz-20.webp"},{"n":"丽都城募","time":"10/21 10:00 – 12/01 03:59","why":"战令","img":"assets/zzz-21.webp"}],"ended":[{"n":"数据悬赏-实战模拟","time":"10/14 04:00 – 10/19 03:59","img":"assets/zzz-22.webp"},{"n":"跛脚乌鸦奇探录","time":"10/03 10:00 – 10/19 03:59","img":"assets/zzz-23.webp"}]},{"id":"wuwa","name":"鸣潮","version":"3.7「镜锁妄世，心照红尘」","accent":"#59d6e0","mid":1955897084,"logo":"assets/logo-wuwa.webp","events":[{"t":"凭栏听雨之礼","img":"assets/wuwa-24.webp","s":"2026-10-22T10:00:00+08:00","e":"2026-11-11T03:59:00+08:00","d":"限时累计签到，最多领浮金波纹 ×10。"},{"t":"无音消除","img":"assets/wuwa-25.webp","s":"2026-10-22T10:00:00+08:00","e":"2026-11-09T03:59:00+08:00","d":"声骸棋子消除玩法，轻松拿星声与养成材料。"},{"t":"朝月鱼涌","img":"assets/wuwa-26.webp","s":"2026-10-15T10:00:00+08:00","e":"2026-11-01T09:59:00+08:00","d":"网页钓鱼活动：解锁鱼群图鉴，领星声、贝币与密音筒。"}],"pools":[{"chars":["锁暝"],"imgs":["assets/pool-wuwa-3-0.webp"],"pool":"「余心所向九死未悔」角色活动唤取（同期另有「显影于明日」「非定义光谱」）","s":"2026-10-22T10:00:00+08:00","e":"2026-11-11T11:59:00+08:00"}],"soon":[{"t":"踏潮探历·玄方地界","d":"10/29 04:00 开启","s":"限时探索委托，每日消耗「探历札记」领补给"}],"folded":[{"n":"梦构匣中","time":"9/30 10:00 – 11/11 03:59","why":"整版本区域探索","img":"assets/wuwa-28.webp"},{"n":"朝月赠礼","time":"9/30 10:00 – 11/11 03:59","why":"整版本签到","img":"assets/wuwa-29.webp"},{"n":"团团勇者大乱斗","time":"9/30 10:00 – 11/11 11:59","why":"整版本","img":"assets/wuwa-27.webp"},{"n":"索拉里斯回归邀约","time":"9/30 10:00 – 11/11 23:59","why":"整版本回归福利","img":"assets/wuwa-30.webp"}],"ended":[{"n":"天工寻物","time":"10/08 04:00 – 10/26 03:59","img":"assets/wuwa-31.webp"},{"n":"回音盈域","time":"10/15 04:00 – 10/22 03:59","img":"assets/wuwa-32.webp"}]},{"id":"endfield","name":"终末地","version":"「丹青渡」","accent":"#7fc9a6","mid":1265652806,"logo":"assets/logo-endfield.webp","events":[{"t":"危机筹备","img":"assets/auto-endfield-3ed008d4.webp","s":"2026-10-28T20:00:00.000Z","e":"2026-11-04T20:00:00.000Z","d":"由官方动态自动收录，可补充说明。"},{"t":"卡莉的芳菲童话","img":"assets/endfield-33.webp","s":"2026-10-22T12:00:00+08:00","e":"2026-11-05T04:00:00+08:00","d":"拍照活动：7 个拍照任务逐日解锁，累计领嵌晶玉 ×1500 与头像框。"}],"pools":[{"chars":["祀"],"imgs":["assets/pool-endfield-4-0.webp"],"pool":"「万物更新」特许寻访","s":"2026-10-15T10:00:00+08:00","e":"2026-11-05T11:59:00+08:00"}],"soon":[{"t":"汤汤 · 「祖泉的新流」重构寻访","d":"10/29 12:00 开启","s":"即将开启"}],"folded":[{"n":"万物有灵（7 日签到）","time":"10/15 12:00 – 11/05 11:59","why":"版本签到福利","img":"assets/endfield-36.webp"},{"n":"烟火生缘","time":"10/15 12:00 – 11/05 12:00","why":"整版本经营活动","img":"assets/endfield-34.webp"},{"n":"墨分诸彩","time":"10/15 12:00 – 11/05 12:00","why":"版本引入活动","img":"assets/endfield-35.webp"}],"ended":[]},{"id":"nte","name":"异环","version":"1.4「祷歌为谁而诵」","accent":"#7ec8ff","mid":3546636978489848,"logo":"assets/logo-nte.webp","events":[{"t":"飞芒环线","img":"assets/nte-feilu.webp","s":"2026-10-30T10:00:00+08:00","e":"2026-11-13T03:59:00+08:00","d":"轨外之境新路线「飞芒环线」，10/30 开启。"},{"t":"噗卡翻翻乐","img":"assets/nte-puka.webp","s":"2026-10-23T10:00:00+08:00","e":"2026-11-05T03:59:00+08:00","d":"完成每日任务获得翻牌次数，翻开图案领取奖励。"},{"t":"夺宝大作战","img":"assets/nte-duobao.webp","s":"2026-10-19T10:00:00+08:00","e":"2026-11-02T03:59:00+08:00","d":"限时夺宝挑战，累计积分兑换养成材料与方斯。"},{"t":"澄明环线","img":"assets/nte-chengming.webp","s":"2026-10-16T10:00:00+08:00","e":"2026-10-30T03:59:00+08:00","d":"轨外之境特别路线，沿澄明环线收集奇遇印记兑换奖励。"}],"pools":[{"chars":["明音凛"],"imgs":["assets/pool-nte-6-0.webp"],"pool":"「灿烂的星」限定棋盘","s":"2026-10-15T10:00:00+08:00","e":"2026-11-05T05:59:00+08:00"}],"soon":[{"t":"异环×炫迈联名","d":"10/30 起","s":"联名产品与主题周边线上多平台开售"}],"folded":[{"n":"Porsche 联动盲盒「骏影疾驰」","time":"9/24 10:00 – 11/05 05:59","why":"持续整版本","img":"assets/nte-porsche.webp"}],"ended":[]}];
 
 const $ = (s,el=document)=>el.querySelector(s);
 
@@ -354,16 +362,18 @@ function poolRow(p){
   const soon=now<st;
   const chars=p.chars||[], imgs=p.imgs||[];
   const multi=chars.length>1;
-  const slides=chars.map((c,i)=>`<div class="pool-slide">${
+  const one=(c,i)=>`<div class="pool-slide">${
     imgs[i] ? `<img src="${imgs[i]}" alt="${c}" loading="lazy">`
             : `<div class="ph">${c}</div>`
-  }</div>`).join("");
+  }</div>`;
+  const seq=multi?[chars.length-1,...chars.map((_,i)=>i),0]:chars.map((_,i)=>i);
+  const slides=seq.map(i=>one(chars[i],i)).join("");
   const dots=multi?`<div class="pool-dots">${chars.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>`:"";
   const nav=multi?`<button class="pool-nav prev" type="button" aria-label="上一个角色">‹</button><button class="pool-nav next" type="button" aria-label="下一个角色">›</button>`:"";
   const pct=Math.min(100,Math.max(0,(now-st)/(en-st)*100));
   return `<div class="pool${soon?" soon":""}" data-s="${st}" data-e="${en}">
-    <div class="pool-media">
-      <div class="pool-slides">${slides}</div>${nav}${dots}
+    <div class="pool-media"${multi?' data-auto="1"':""}>
+      <div class="pool-slides" data-n="${chars.length}" data-idx="${multi?1:0}"${multi?' style="transform:translateX(-100%)"':""}>${slides}</div>${nav}${dots}
     </div>
     <div class="pool-info">
       <div class="pool-top">
@@ -389,8 +399,9 @@ function render(){
     const live=g.events.filter(ev=>now>=new Date(ev.s)&&now<new Date(ev.e));
     const soon=g.events.filter(ev=>now<new Date(ev.s));
     const ended=g.events.filter(ev=>now>=new Date(ev.e));
-    const cards=[...live,...soon].map(card).join("");
-    const empty=cards?"":`<div class="empty">这个版本暂时没有正在进行/即将开始的<b>短期限时活动</b>。<br>持续整版本的活动已按规则折叠在下方。</div>`;
+    const pvCards=[...live,...soon].filter(ev=>ev.pv).map(card).join("");
+    const normalCards=[...live,...soon].filter(ev=>!ev.pv).map(card).join("");
+    const empty=normalCards?"":`<div class="empty">暂无活动</div>`;
     const soonRows=(g.soon||[]).map(x=>`<div class="soon-row"><span class="d">${x.d}</span><span class="t">${x.t}</span><span class="s">${x.s}</span></div>`).join("");
     const folded=(g.folded||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<span class="n">${x.n}</span><span class="time">${x.time}</span><span class="why">${x.why}</span></div>`).join("");
     const endedRows=(g.ended||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<span class="n">${x.n}</span><span class="time">${x.time}</span></div>`).join("");
@@ -398,9 +409,9 @@ function render(){
       <div class="panel-head">
         <h2>${g.name}</h2><span class="ver">${g.version}</span>
       </div>
-      ${empty}
-      <div class="grid">${cards}</div>
+      ${pvCards?`<div class="grid">${pvCards}</div>`:""}
       ${(g.pools&&g.pools.length)?`<div class="pool-wrap">${g.pools.map(poolRow).join("")}</div>`:""}
+      ${normalCards?`<div class="grid">${normalCards}</div>`:empty}
       ${soonRows?`<div class="soon-box"><h4>其他即将开始 / 待官宣</h4>${soonRows}</div>`:""}
       ${folded?`<details class="fold"><summary>持续整版本的活动（共 ${(g.folded||[]).length} 个）</summary><div class="rows">${folded}</div></details>`:""}
       ${endedRows?`<details class="fold"><summary>近期已结束（共 ${(g.ended||[]).length} 个）</summary><div class="rows">${endedRows}</div></details>`:""}
@@ -412,7 +423,9 @@ function tick(){
   document.querySelectorAll("[data-count]").forEach(el=>{
     const t=+el.dataset.t, ms=t-Date.now(), k=el.dataset.count;
     const pre=k==="end"?"剩余":k==="pv"?"距开播":"距开始";
-    el.innerHTML = `<small>${pre}</small>${remain(Math.max(0,ms))}`;
+    const urgent=k==="end" && ms>0 && ms<3*86400000;
+    el.classList.toggle("urgent",urgent);
+    el.innerHTML = `<small>${pre}</small>${remain(Math.max(0,ms))}${urgent?'<i class="warn">即将结束</i>':''}`;
   });
   document.querySelectorAll(".pool[data-s]").forEach(p=>{
     const now=Date.now(), s=+p.dataset.s, e=+p.dataset.e;
@@ -477,21 +490,48 @@ document.addEventListener("keydown",e=>{
   else if(e.key==="ArrowLeft") step(-1);
 });
 
-// 卡池轮播：按钮翻页 + 滑动时同步圆点
+// 卡池轮播：克隆首尾，任一方向都持续向前，不回头
+function poolGo(media,dir){
+  const box=media.querySelector(".pool-slides"); if(!box) return;
+  const n=+box.dataset.n; if(!n) return;
+  let idx=+box.dataset.idx+dir;
+  box.dataset.idx=idx;
+  box.style.transform="translateX("+(-idx*100)+"%)";
+  const dots=media.querySelectorAll(".pool-dots i");
+  const cur=((idx-1)%n+n)%n;
+  dots.forEach((d,k)=>d.classList.toggle("on",k===cur));
+  if(idx===0||idx===n+1){
+    setTimeout(()=>{
+      box.style.transition="none";
+      idx = idx===0 ? n : 1;
+      box.dataset.idx=idx;
+      box.style.transform="translateX("+(-idx*100)+"%)";
+      void box.offsetWidth;
+      box.style.transition="";
+    },440);
+  }
+}
 document.addEventListener("click",e=>{
   const b=e.target.closest(".pool-nav"); if(!b) return;
-  const box=b.closest(".pool-media").querySelector(".pool-slides");
-  const n=box.querySelectorAll(".pool-slide").length; if(!n) return;
-  const i=Math.round(box.scrollLeft/box.clientWidth);
-  const next=(i+(b.classList.contains("next")?1:-1)+n)%n;
-  box.scrollTo({left:next*box.clientWidth, behavior:"smooth"});
+  const media=b.closest(".pool-media"); if(!media) return;
+  media.dataset.pause="1";
+  poolGo(media, b.classList.contains("next")?1:-1);
+  clearTimeout(media._t);
+  media._t=setTimeout(()=>{ delete media.dataset.pause; },4000);
 });
-document.addEventListener("scroll",e=>{
-  const el=e.target;
-  if(!el || !el.classList || !el.classList.contains("pool-slides")) return;
-  const i=Math.round(el.scrollLeft/el.clientWidth);
-  el.parentElement.querySelectorAll(".pool-dots i").forEach((d,k)=>d.classList.toggle("on",k===i));
+document.addEventListener("pointerenter",e=>{
+  const m=e.target.closest&&e.target.closest(".pool-media"); if(m) m.dataset.pause="1";
 },true);
+document.addEventListener("pointerleave",e=>{
+  const m=e.target.closest&&e.target.closest(".pool-media"); if(m) delete m.dataset.pause;
+},true);
+setInterval(()=>{
+  if(document.hidden) return;
+  document.querySelectorAll('.pool-media[data-auto="1"]').forEach(m=>{
+    if(m.dataset.pause==="1") return;
+    poolGo(m,1);
+  });
+},3000);
 
 const themeBtn=document.getElementById("themeBtn");
 function setTheme(t){
