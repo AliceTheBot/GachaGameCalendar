@@ -241,15 +241,25 @@
     border:1px solid color-mix(in srgb,var(--accent) 45%, transparent);
     padding:3px 9px;border-radius:999px;
   }
-  .pool-chars{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .pool-chars{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .pool-chars .pool-tag{margin-left:2px}
   .pool-chars b{font-size:15px;letter-spacing:.3px}
   .pool-chars b+b::before{content:"/";margin-right:10px;font-weight:400;color:var(--dim);opacity:.55}
   .pool-sub{font-size:12.5px;color:var(--dim);line-height:1.5}
-  .pool-time{margin-left:auto;font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pool-time{font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums}
   .pool-bar{height:4px;border-radius:4px;background:var(--chip2);overflow:hidden;margin-top:2px}
   .pool-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 45%, #8ea2ff));transition:width .6s}
   .pool-time small{color:var(--dim);margin-right:5px;font-size:11px}
 
+  .switch-games{display:flex;justify-content:center;gap:12px;margin:30px 0 4px}
+  .switch-btn{
+    width:58px;height:40px;border-radius:11px;display:grid;place-items:center;padding:0;cursor:pointer;
+    font-size:21px;line-height:1;color:var(--dim);
+    background:color-mix(in srgb,var(--txt) 6%, transparent);
+    border:1px solid var(--line);transition:color .18s,border-color .18s,background .18s;
+  }
+  .switch-btn:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 55%, var(--line));background:color-mix(in srgb,var(--accent) 12%, transparent)}
+  .switch-btn:active{transform:translateY(1px)}
   footer.src{margin-top:34px;color:#6f778a;font-size:12px;line-height:1.8}
   footer.src a{color:#8b93a8}
   .foot-date{display:none;color:#6f778a;margin-bottom:6px}
@@ -374,11 +384,8 @@ function poolRow(p){
       <div class="pool-slides" data-n="${chars.length}" data-idx="${multi?1:0}"${multi?' style="transform:translateX(-100%)"':""}>${slides}</div>${nav}${dots}
     </div>
     <div class="pool-info">
-      <div class="pool-top">
-        <span class="pool-tag">${soon?"即将开启":"当前卡池"}</span>
-        <span class="pool-time" data-count="${soon?"start":"end"}" data-t="${soon?st:en}"></span>
-      </div>
-      <div class="pool-chars">${chars.map(c=>`<b>${c}</b>`).join("")}</div>
+      <div class="pool-chars">${chars.map(c=>`<b>${c}</b>`).join("")}<span class="pool-tag">${soon?"即将开启":"当前卡池"}</span></div>
+      <div class="pool-time" data-count="${soon?"start":"end"}" data-t="${soon?st:en}"></div>
       <div class="pool-bar"><i style="width:${soon?0:pct}%"></i></div>
     </div>
   </div>`;
@@ -413,6 +420,10 @@ function render(){
       ${soonRows?`<div class="soon-box"><h4>其他即将开始 / 待官宣</h4>${soonRows}</div>`:""}
       ${folded?`<details class="fold"><summary>持续整版本的活动（共 ${(g.folded||[]).length} 个）</summary><div class="rows">${folded}</div></details>`:""}
       ${endedRows?`<details class="fold"><summary>近期已结束（共 ${(g.ended||[]).length} 个）</summary><div class="rows">${endedRows}</div></details>`:""}
+      <div class="switch-games">
+        <button class="switch-btn" type="button" data-dir="-1" aria-label="上一个游戏">‹</button>
+        <button class="switch-btn" type="button" data-dir="1" aria-label="下一个游戏">›</button>
+      </div>
     </section>`;
   }).join("");
 }
@@ -460,6 +471,11 @@ function step(dir){
   const i=DATA.findIndex(g=>g.id===current);
   selectGame(DATA[(i+dir+DATA.length)%DATA.length].id);
 }
+
+$("#panels").addEventListener("click",e=>{
+  const b=e.target.closest(".switch-btn"); if(!b) return;
+  step(+b.dataset.dir);
+});
 
 $("#tabs").addEventListener("click",e=>{
   const b=e.target.closest(".tab"); if(!b) return;
