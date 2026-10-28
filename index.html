@@ -196,7 +196,10 @@
   details.fold summary::before{content:"▸";display:inline-block;margin-right:8px;transition:.2s;color:var(--accent)}
   details.fold[open] summary::before{transform:rotate(90deg)}
   details.fold .rows{padding:2px 0 10px}
-  .row{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:7px 0;font-size:13px;border-top:1px dashed var(--line)}
+  .row{display:flex;align-items:center;gap:12px;padding:7px 0;font-size:13px;border-top:1px dashed var(--line)}
+  .row-txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .row-txt .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row-txt .time{white-space:normal}
   .row .mini{width:62px;height:40px;object-fit:cover;border-radius:6px;flex:none;border:1px solid var(--line);background:var(--chip2)}
   .row .n{font-weight:500}
   .row .time{color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
@@ -408,8 +411,8 @@ function render(){
     const normalCards=[...live,...soon].filter(ev=>!ev.pv).map(card).join("");
     const empty=normalCards?"":`<div class="empty">暂无活动</div>`;
     const soonRows=(g.soon||[]).map(x=>`<div class="soon-row"><span class="d">${x.d}</span><span class="t">${x.t}</span><span class="s">${x.s}</span></div>`).join("");
-    const folded=(g.folded||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<span class="n">${x.n}</span><span class="time">${x.time}</span><span class="why">${x.why}</span></div>`).join("");
-    const endedRows=(g.ended||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<span class="n">${x.n}</span><span class="time">${x.time}</span></div>`).join("");
+    const foldedRows=(g.folded||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<div class="row-txt"><span class="n">${x.n}</span><span class="time">${x.time}</span></div><span class="why">${x.why}</span></div>`).join("");
+    const endedRows=(g.ended||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<div class="row-txt"><span class="n">${x.n}</span><span class="time">${x.time}</span></div></div>`).join("");
     return `<section class="panel${g.id===current?" on":""}" data-id="${g.id}" style="--accent:${g.accent}">
       <div class="panel-head">
         <h2>${g.name}</h2><span class="ver">${g.version}</span>
@@ -418,7 +421,7 @@ function render(){
       ${(g.pools&&g.pools.length)?`<div class="pool-wrap">${g.pools.map(poolRow).join("")}</div>`:""}
       ${normalCards?`<div class="grid">${normalCards}</div>`:empty}
       ${soonRows?`<div class="soon-box"><h4>其他即将开始 / 待官宣</h4>${soonRows}</div>`:""}
-      ${folded?`<details class="fold"><summary>持续整版本的活动（共 ${(g.folded||[]).length} 个）</summary><div class="rows">${folded}</div></details>`:""}
+      ${foldedRows?`<details class="fold" open><summary>持续整版本的活动（共 ${(g.folded||[]).length} 个）</summary><div class="rows">${foldedRows}</div></details>`:""}
       ${endedRows?`<details class="fold"><summary>近期已结束（共 ${(g.ended||[]).length} 个）</summary><div class="rows">${endedRows}</div></details>`:""}
       <div class="switch-games">
         <button class="switch-btn" type="button" data-dir="-1" aria-label="上一个游戏">‹</button>
