@@ -18,7 +18,7 @@ const DISCOVER = !process.argv.includes('--no-discover');
 fs.mkdirSync(CACHE_DIR, { recursive: true });
 fs.mkdirSync(ASSETS, { recursive: true });
 
-const games = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'games.json'), 'utf8'));
+const games = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'games.json'), 'utf8')).filter(g => g.off !== true);
 const curated = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'curated.json'), 'utf8'));
 const banners = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'banners.json'), 'utf8'));
 const previewsPath = path.join(DATA_DIR, 'previews.json');
@@ -159,7 +159,7 @@ function findPreview(it, game) {
   const ts = datesIn(text).map(d => d.iso).filter(t => t > NOW - 3600e3).sort((a, b) => a - b)[0];
   if (!ts || ts > NOW + 45 * 864e5) return null;
   const ver = text.match(/(\d+\.\d+)\s*版本/);
-  const title = `${game.name}${ver ? ' ' + ver[1] + ' 版本' : ''}前瞻特别节目`;
+  const title = `${ver ? ver[1] + ' 版本' : ''}前瞻特别节目`;
   return { game: game.id, title, iso: new Date(ts).toISOString(), desc: '官方前瞻特别节目，直播结束后整理情报。', cover: it.cover, opus: it.opus };
 }
 

@@ -270,6 +270,7 @@
   @media (max-width:640px){
     .grid{grid-template-columns:minmax(0,1fr)}
     .card,.pool,.pool-wrap,.panel{min-width:0}
+    .row .why{display:none}
     .wrap{padding:14px 14px 44px}
     h1{font-size:17px}
     .top-right{gap:6px}
@@ -358,10 +359,9 @@ function card(ev){
     <div class="body">
       <h3>${ev.t}<span class="state ${cls}">${label}</span></h3>
       ${pv?"":`<div class="range">${fmtRange(ev)}</div>`}
-      <p class="desc">${ev.d||""}</p>
+      ${pv?"":`<p class="desc">${ev.d||""}</p>`}
       <div class="foot">
         <span class="count" data-count="${pv?"pv":live?"end":"start"}" data-t="${pv||(live?e:s)}">${pv?"距开播":live?"剩余":"距开始"} —</span>
-        <span class="pct">${live?Math.round(pct)+"%":""}</span>
       </div>
       <div class="bar"><i style="width:${(pv?now>=s:live)?pct:0}%"></i></div>
     </div>
