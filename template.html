@@ -69,11 +69,13 @@
   .brand{display:flex;align-items:center;gap:9px}
   .logo{
     width:30px;height:30px;border-radius:50%;flex:none;overflow:hidden;
+    text-decoration:none;cursor:pointer;transition:transform .18s,box-shadow .18s;
     background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 35%, #6d7cff));
     display:grid;place-items:center;color:#12141a;font-weight:800;font-size:14px;
     box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 25%, transparent);
   }
   .logo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .3s ease,transform .4s ease}
+  .logo:hover{transform:translateY(-1px) scale(1.04)}
   h1{font-size:19px;line-height:1.15;margin:0;letter-spacing:.3px}
   .sub{color:var(--dim);font-size:13px;margin-top:6px}
   .top-right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
@@ -222,10 +224,13 @@
     border:1px solid color-mix(in srgb,var(--accent) 45%, transparent);
     padding:3px 9px;border-radius:999px;
   }
-  .pool-chars{display:flex;gap:8px;flex-wrap:wrap}
+  .pool-chars{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
   .pool-chars b{font-size:15px;letter-spacing:.3px}
+  .pool-chars b+b::before{content:"/";margin-right:10px;font-weight:400;color:var(--dim);opacity:.55}
   .pool-sub{font-size:12.5px;color:var(--dim);line-height:1.5}
   .pool-time{margin-left:auto;font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pool-bar{height:4px;border-radius:4px;background:var(--chip2);overflow:hidden;margin-top:2px}
+  .pool-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 45%, #8ea2ff));transition:width .6s}
   .pool-time small{color:var(--dim);margin-right:5px;font-size:11px}
 
   footer.src{margin-top:34px;color:#6f778a;font-size:12px;line-height:1.8}
@@ -251,7 +256,7 @@
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <div class="logo" aria-hidden="true"><img id="logoImg" alt="" src="assets/logo-genshin.webp" /></div>
+      <a class="logo" id="logoLink" href="https://space.bilibili.com/401742377/dynamic" target="_blank" rel="noopener" title="打开该游戏的 B 站官方动态"><img id="logoImg" alt="" src="assets/logo-genshin.webp" /></a>
       <div>
         <h1>手游活动日历</h1>
       </div>
@@ -282,6 +287,8 @@ const $ = (s,el=document)=>el.querySelector(s);
 function setLogo(id){
   const img=document.getElementById("logoImg"); if(!img) return;
   const g=DATA.find(x=>x.id===id); if(!g||!g.logo) return;
+  const link=document.getElementById("logoLink");
+  if(link && g.mid){ link.href=`https://space.bilibili.com/${g.mid}/dynamic`; link.title=`打开${g.name}的 B 站官方动态`; }
   if(img.getAttribute("src")===g.logo) return;
   img.style.opacity="0";
   img.style.transform="scale(.82)";
@@ -335,7 +342,8 @@ function poolRow(p){
   }</div>`).join("");
   const dots=multi?`<div class="pool-dots">${chars.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>`:"";
   const nav=multi?`<button class="pool-nav prev" type="button" aria-label="上一个角色">‹</button><button class="pool-nav next" type="button" aria-label="下一个角色">›</button>`:"";
-  return `<div class="pool${soon?" soon":""}">
+  const pct=Math.min(100,Math.max(0,(now-st)/(en-st)*100));
+  return `<div class="pool${soon?" soon":""}" data-s="${st}" data-e="${en}">
     <div class="pool-media">
       <div class="pool-slides">${slides}</div>${nav}${dots}
     </div>
@@ -346,6 +354,7 @@ function poolRow(p){
       </div>
       <div class="pool-chars">${chars.map(c=>`<b>${c}</b>`).join("")}</div>
       <div class="pool-sub">${p.pool}</div>
+      <div class="pool-bar"><i style="width:${soon?0:pct}%"></i></div>
     </div>
   </div>`;
 }
@@ -387,6 +396,11 @@ function tick(){
   document.querySelectorAll("[data-count]").forEach(el=>{
     const t=+el.dataset.t, ms=t-Date.now();
     el.innerHTML = `<small>${el.dataset.count==="end"?"剩余":"距开始"}</small>${remain(Math.max(0,ms))}`;
+  });
+  document.querySelectorAll(".pool[data-s]").forEach(p=>{
+    const now=Date.now(), s=+p.dataset.s, e=+p.dataset.e;
+    const i=p.querySelector(".pool-bar i"); if(!i) return;
+    i.style.width=Math.min(100,Math.max(0,(now-s)/(e-s)*100))+"%";
   });
   document.querySelectorAll(".card").forEach(c=>{
     const now=Date.now(), s=+c.dataset.s, e=+c.dataset.e;
@@ -448,7 +462,10 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("click",e=>{
   const b=e.target.closest(".pool-nav"); if(!b) return;
   const box=b.closest(".pool-media").querySelector(".pool-slides");
-  box.scrollBy({left:(b.classList.contains("next")?1:-1)*box.clientWidth, behavior:"smooth"});
+  const n=box.querySelectorAll(".pool-slide").length; if(!n) return;
+  const i=Math.round(box.scrollLeft/box.clientWidth);
+  const next=(i+(b.classList.contains("next")?1:-1)+n)%n;
+  box.scrollTo({left:next*box.clientWidth, behavior:"smooth"});
 });
 document.addEventListener("scroll",e=>{
   const el=e.target;

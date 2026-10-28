@@ -209,7 +209,7 @@ function buildGame(g, allEvents) {
   }
   short.sort((a, b) => +new Date(a.e) - +new Date(b.e));
   return {
-    id: g.id, name: g.name, version: g.version, accent: g.accent,
+    id: g.id, name: g.name, version: g.version, accent: g.accent, mid: g.mid,
     logo: `assets/logo-${g.id}.webp`,
     events: short.map(toCard),
     pools: banners

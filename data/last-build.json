@@ -1,11 +1,12 @@
 {
- "at": "2026-10-28T13:34:05.453Z",
+ "at": "2026-10-28T13:43:48.877Z",
  "data": [
   {
    "id": "genshin",
    "name": "原神",
    "version": "7.1「往冥府的安魂歌」",
    "accent": "#e8c37a",
+   "mid": 401742377,
    "logo": "assets/logo-genshin.webp",
    "events": [
     {
@@ -95,6 +96,7 @@
    "name": "星穹铁道",
    "version": "4.6「月升之前，与兽共舞」",
    "accent": "#9b8cff",
+   "mid": 1340190821,
    "logo": "assets/logo-starrail.webp",
    "events": [
     {
@@ -114,7 +116,7 @@
      ],
      "imgs": [
       "assets/pool-starrail-0.webp",
-      null
+      "assets/pool-starrail-1.webp"
      ],
      "pool": "4.6 活动跃迁 · 其二（真珠 9/28 起 / 千冶·刃 10/21 起）",
      "s": "2026-09-28T11:00:00+08:00",
@@ -173,6 +175,7 @@
    "name": "绝区零",
    "version": "3.3「重返天空的旅程」",
    "accent": "#ffd23f",
+   "mid": 1636034895,
    "logo": "assets/logo-zzz.webp",
    "events": [
     {
@@ -190,7 +193,7 @@
       "维琳娜"
      ],
      "imgs": [
-      null,
+      "assets/pool-zzz-0.webp",
       null
      ],
      "pool": "3.3 限定调频（维琳娜为复刻）",
@@ -237,6 +240,7 @@
    "name": "鸣潮",
    "version": "3.7「镜锁妄世，心照红尘」",
    "accent": "#59d6e0",
+   "mid": 1955897084,
    "logo": "assets/logo-wuwa.webp",
    "events": [
     {
@@ -325,6 +329,7 @@
    "name": "终末地",
    "version": "「丹青渡」",
    "accent": "#7fc9a6",
+   "mid": 1265652806,
    "logo": "assets/logo-endfield.webp",
    "events": [
     {
@@ -359,7 +364,7 @@
       "汤汤"
      ],
      "imgs": [
-      "assets/pool-endfield-0.webp"
+      null
      ],
      "pool": "「祖泉的新流」重构寻访",
      "s": "2026-10-29T12:00:00+08:00",
@@ -394,6 +399,7 @@
    "name": "异环",
    "version": "1.4「祷歌为谁而诵」",
    "accent": "#7ec8ff",
+   "mid": 3546636978489848,
    "logo": "assets/logo-nte.webp",
    "events": [
     {
