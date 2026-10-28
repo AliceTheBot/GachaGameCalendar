@@ -206,13 +206,15 @@
   .pool-dots i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 4px rgba(0,0,0,.45);transition:.18s}
   .pool-dots i.on{width:13px;border-radius:3px;background:#fff}
   .pool-nav{
-    position:absolute;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;
-    border:0;padding:0;cursor:pointer;display:grid;place-items:center;line-height:1;font-size:13px;
-    background:rgba(10,12,18,.55);color:#fff;
+    position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.3);padding:0;cursor:pointer;display:grid;place-items:center;
+    line-height:1;font-size:14px;color:#fff;
+    background:rgba(12,14,20,.42);backdrop-filter:blur(6px);
+    transition:background .18s,border-color .18s;
   }
-  .pool-nav.prev{left:5px}.pool-nav.next{right:5px}
-  .pool-nav:hover{background:rgba(10,12,18,.82)}
-  @media (pointer:coarse){ .pool-nav{display:none} }
+  .pool-nav.prev{left:6px}.pool-nav.next{right:6px}
+  .pool-nav:hover{background:rgba(12,14,20,.72);border-color:rgba(255,255,255,.55)}
+  .pool-nav:active{transform:translateY(-50%) scale(.94)}
   .pool-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
   .pool-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .pool-tag{
@@ -256,7 +258,6 @@
     </div>
     <div class="top-right">
       <div class="pill">更新于 <b>2026.10.28</b></div>
-      <div class="pill" id="statPill">统计中…</div>
       <button class="theme-btn" id="themeBtn" type="button" title="切换明暗主题" aria-label="切换明暗主题">☾</button>
     </div>
   </header>
@@ -380,16 +381,6 @@ function render(){
       ${endedRows?`<details class="fold"><summary>近期已结束（共 ${(g.ended||[]).length} 个）</summary><div class="rows">${endedRows}</div></details>`:""}
     </section>`;
   }).join("");
-
-  const totalLive=DATA.reduce((a,g)=>{
-    const now=Date.now();
-    return a+g.events.filter(ev=>now>=new Date(ev.s)&&now<new Date(ev.e)).length;
-  },0);
-  const totalSoon=DATA.reduce((a,g)=>{
-    const now=Date.now();
-    return a+g.events.filter(ev=>now<new Date(ev.s)).length;
-  },0);
-  $("#statPill").innerHTML=`<b>${totalLive}</b> 个进行中 · <b>${totalSoon}</b> 个即将开始`;
 }
 
 function tick(){
