@@ -419,7 +419,9 @@ function render(){
     const ended=g.events.filter(ev=>now>=new Date(ev.e));
     const allPools=(g.pools||[]).filter(p=>now<+new Date(p.e)).sort((a,b)=>+new Date(b.s)-+new Date(a.s));
     const pvCards=[...live,...soon].filter(ev=>ev.pv).map(card).join("");
-    const normalCards=[...live,...soon.sort((a,b)=>+new Date(a.s)-+new Date(b.s))].filter(ev=>!ev.pv).map(card).join("");
+    const t0=(()=>{const d=new Date();d.setHours(0,0,0,0);return +d})();
+    const evSort=(x,y)=>{const A=+new Date(x.s),B=+new Date(y.s);return ((B>=t0&&B<t0+864e5)?1:0)-((A>=t0&&A<t0+864e5)?1:0)||(B-A)};
+    const normalCards=[...live,...soon].sort(evSort).filter(ev=>!ev.pv).map(card).join("");
     const empty=normalCards?"":`<div class="empty">暂无活动</div>`;
     const soonRows=(g.soon||[]).map(x=>`<div class="soon-row"><span class="d">${x.d}</span><span class="t">${x.t}</span><span class="s">${x.s}</span></div>`).join("");
     const foldedRows=(g.folded||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<div class="row-txt"><span class="n">${x.n}</span><span class="time">${x.time}</span></div><span class="why">${x.why}</span></div>`).join("");
