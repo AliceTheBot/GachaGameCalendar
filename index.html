@@ -126,6 +126,7 @@
   .ver{font-size:13px;color:var(--accent)}
   .note{font-size:12.5px;color:var(--dim);margin-left:auto}
 
+  .panel .grid+.grid{margin-top:18px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;align-items:stretch}
   article.card{
     background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
@@ -211,7 +212,7 @@
     position:relative;display:flex;gap:14px;align-items:center;border-radius:14px;padding:12px 14px;
     border:0;
     background:linear-gradient(100deg, color-mix(in srgb,var(--accent) 22%, var(--card)) 0%, color-mix(in srgb,var(--accent) 8%, var(--card)) 42%, var(--card) 100%);
-    box-shadow:inset 3px 0 0 var(--accent), inset 0 0 0 1px color-mix(in srgb,var(--accent) 18%, transparent);
+    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 16%, transparent);
   }
   .pool .pool-tag{background:color-mix(in srgb,var(--accent) 26%, transparent);border-color:color-mix(in srgb,var(--accent) 45%, transparent)}
   .pool.soon{opacity:.92}
@@ -239,8 +240,7 @@
   .pool-nav.prev{left:6px}.pool-nav.next{right:6px}
   .pool-nav:hover{background:rgba(12,14,20,.72);border-color:rgba(255,255,255,.55)}
   .pool-nav:active{transform:translateY(-50%) scale(.94)}
-  .pool-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .pool-time{margin-left:auto;font-size:12.5px;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pool-time{margin-top:6px;font-size:12.5px;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
   .pool-time b{color:var(--txt);font-weight:600}
   .pool-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
   .pool-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -396,11 +396,9 @@ function poolRow(p){
       <div class="pool-slides" data-n="${chars.length}" data-idx="${multi?1:0}"${multi?' style="transform:translateX(-100%)"':""}>${slides}</div>${nav}${dots}
     </div>
     <div class="pool-info">
-      <div class="pool-head">
-        <div class="pool-chars">${chars.map(c=>`<b>${c}</b>`).join("")}<span class="pool-tag">${soon?"即将开启":"当前卡池"}</span></div>
-        <div class="pool-time" data-count="${(+new Date(first.s)>now)?"start":"end"}" data-t="${(+new Date(first.s)>now)?+new Date(first.s):+new Date(first.e)}"></div>
-      </div>
+      <div class="pool-chars">${chars.map(c=>`<b>${c}</b>`).join("")}<span class="pool-tag">${soon?"即将开启":"当前卡池"}</span></div>
       <div class="pool-name">${first.name||""}</div>
+      <div class="pool-time" data-count="${(+new Date(first.s)>now)?"start":"end"}" data-t="${(+new Date(first.s)>now)?+new Date(first.s):+new Date(first.e)}"></div>
       <div class="pool-bar"><i style="width:${soon?0:pct}%"></i></div>
     </div>
   </div>`;
@@ -419,8 +417,8 @@ function render(){
     const live=g.events.filter(ev=>now>=new Date(ev.s)&&now<new Date(ev.e));
     const soon=g.events.filter(ev=>now<new Date(ev.s));
     const ended=g.events.filter(ev=>now>=new Date(ev.e));
-    const livePools=(g.pools||[]).filter(p=>now>=+new Date(p.s));
-    const soonPools=(g.pools||[]).filter(p=>now<+new Date(p.s));
+    const livePools=(g.pools||[]).filter(p=>now>=+new Date(p.s)).sort((a,b)=>+new Date(b.s)-+new Date(a.s));
+    const soonPools=(g.pools||[]).filter(p=>now<+new Date(p.s)).sort((a,b)=>+new Date(b.s)-+new Date(a.s));
     const pvCards=[...live,...soon].filter(ev=>ev.pv).map(card).join("");
     const normalCards=[...live,...soon].filter(ev=>!ev.pv).map(card).join("");
     const empty=normalCards?"":`<div class="empty">暂无活动</div>`;
@@ -511,11 +509,13 @@ $("#tabs").addEventListener("click",e=>{
 
 // 左右滑动切换（仅在横向位移明显大于纵向时触发，避免影响上下滚动）
 let tx=0,ty=0,ts=0,inTabs=false;
+let inPool=null;
 document.addEventListener("touchstart",e=>{
   if(e.touches.length!==1){ tx=ty=0; return; }
   const t=e.touches[0];
   tx=t.clientX; ty=t.clientY; ts=Date.now();
   inTabs=!!e.target.closest("nav.tabs");
+  inPool=e.target.closest(".pool-media");
 },{passive:true});
 document.addEventListener("touchend",e=>{
   if(!tx||inTabs) return;
@@ -523,6 +523,7 @@ document.addEventListener("touchend",e=>{
   tx=ty=0;
   if(Date.now()-ts>800) return;
   if(Math.abs(dx)<60 || Math.abs(dx)<Math.abs(dy)*1.6) return;
+  if(inPool && inPool.isConnected){ poolGo(inPool, dx<0?1:-1); inPool=null; return; }
   step(dx<0?1:-1);
 },{passive:true});
 
