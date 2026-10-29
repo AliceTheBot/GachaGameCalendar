@@ -211,8 +211,8 @@
   .pool{
     position:relative;display:flex;gap:14px;align-items:center;border-radius:14px;padding:12px 14px;
     border:0;
-    background:linear-gradient(100deg, color-mix(in srgb,var(--accent) 22%, var(--card)) 0%, color-mix(in srgb,var(--accent) 8%, var(--card)) 42%, var(--card) 100%);
-    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 16%, transparent);
+    background:var(--card);
+    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 22%, transparent);
   }
   .pool .pool-tag{background:color-mix(in srgb,var(--accent) 26%, transparent);border-color:color-mix(in srgb,var(--accent) 45%, transparent)}
   .pool.soon{opacity:.92}
@@ -417,15 +417,11 @@ function render(){
     const live=g.events.filter(ev=>now>=new Date(ev.s)&&now<new Date(ev.e));
     const soon=g.events.filter(ev=>now<new Date(ev.s));
     const ended=g.events.filter(ev=>now>=new Date(ev.e));
-    const livePools=(g.pools||[]).filter(p=>now>=+new Date(p.s)).sort((a,b)=>+new Date(b.s)-+new Date(a.s));
-    const soonPools=(g.pools||[]).filter(p=>now<+new Date(p.s)).sort((a,b)=>+new Date(b.s)-+new Date(a.s));
+    const allPools=(g.pools||[]).filter(p=>now<+new Date(p.e)).sort((a,b)=>+new Date(b.s)-+new Date(a.s));
     const pvCards=[...live,...soon].filter(ev=>ev.pv).map(card).join("");
-    const normalCards=[...live,...soon].filter(ev=>!ev.pv).map(card).join("");
+    const normalCards=[...live,...soon.sort((a,b)=>+new Date(a.s)-+new Date(b.s))].filter(ev=>!ev.pv).map(card).join("");
     const empty=normalCards?"":`<div class="empty">暂无活动</div>`;
-    const _t0=(()=>{const d=new Date();d.setHours(0,0,0,0);return +d})();
-    const _md=t=>{const d=new Date(t);return (d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
-    const poolSoonRows=soonPools.map(p=>{const st=+new Date(p.s);return {d:`${_md(st)} 开启`,t:`${p.chars.join(" / ")} · ${p.pool}`,s:(st>=_t0&&st<_t0+86400000)?"今日开始":"即将开启"}});
-    const soonRows=[...poolSoonRows,...(g.soon||[])].map(x=>`<div class="soon-row"><span class="d">${x.d}</span><span class="t">${x.t}</span><span class="s">${x.s}</span></div>`).join("");
+    const soonRows=(g.soon||[]).map(x=>`<div class="soon-row"><span class="d">${x.d}</span><span class="t">${x.t}</span><span class="s">${x.s}</span></div>`).join("");
     const foldedRows=(g.folded||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<div class="row-txt"><span class="n">${x.n}</span><span class="time">${x.time}</span></div><span class="why">${x.why}</span></div>`).join("");
     const endedRows=(g.ended||[]).map(x=>`<div class="row">${x.img?`<img class="mini" src="${x.img}" alt="" loading="lazy">`:""}<div class="row-txt"><span class="n">${x.n}</span><span class="time">${x.time}</span></div></div>`).join("");
     return `<section class="panel${g.id===current?" on":""}" data-id="${g.id}" style="--accent:${g.accent}">
@@ -437,7 +433,7 @@ function render(){
       ${soonRows?`<div class="soon-box"><h4>其他即将开始 / 待官宣</h4>${soonRows}</div>`:""}
       ${foldedRows?`<details class="fold" open><summary>持续整版本的活动（共 ${(g.folded||[]).length} 个）</summary><div class="rows">${foldedRows}</div></details>`:""}
       ${endedRows?`<details class="fold"><summary>近期已结束（共 ${(g.ended||[]).length} 个）</summary><div class="rows">${endedRows}</div></details>`:""}
-      ${livePools.length?`<div class="pool-wrap"><h4 class="pool-title">当前卡池</h4>${livePools.map(poolRow).join("")}</div>`:""}
+      ${allPools.length?`<div class="pool-wrap"><h4 class="pool-title">卡池</h4>${allPools.map(poolRow).join("")}</div>`:""}
       <div class="switch-games">
         <button class="switch-btn" type="button" data-dir="-1" aria-label="上一个游戏">‹</button>
         <button class="switch-btn" type="button" data-dir="1" aria-label="下一个游戏">›</button>
