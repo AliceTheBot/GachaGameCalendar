@@ -269,7 +269,7 @@ function buildGame(g, allEvents) {
     logo: `assets/logo-${g.id}.webp`,
     events: short.map(toCard),
     pools: myPools
-      .sort((a, b) => +new Date(a.s) - +new Date(b.s))
+      .sort((a, b) => +new Date(b.s) - +new Date(a.s))
       .map(b => ({ chars: b.chars, imgs: b.imgs || [], pool: b.pool, s: b.s, e: b.e, pools: b.pools || null })),
     soon: notes,
     folded: folded.map(e => ({ n: e.title, time: `${fmt(+new Date(e.s))} – ${fmt(+new Date(e.e))}`, why: e.why || '持续整版本', img: e.img || '' })),
