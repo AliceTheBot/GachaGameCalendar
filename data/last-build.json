@@ -1,5 +1,5 @@
 {
- "at": "2026-10-31T00:19:38.246Z",
+ "at": "2026-10-31T23:54:59.589Z",
  "data": [
   {
    "id": "genshin",
@@ -384,6 +384,13 @@
    "mid": 1265652806,
    "logo": "assets/logo-endfield.webp",
    "events": [
+    {
+     "t": "予众魂的新光影",
+     "img": "assets/auto-endfield-5965e7c3.webp",
+     "s": "2026-10-31T04:00:00.000Z",
+     "e": "2026-11-13T20:00:00.000Z",
+     "d": "由官方动态自动收录，可补充说明。"
+    },
     {
      "t": "危机筹备",
      "img": "assets/auto-endfield-3ed008d4.webp",
