@@ -225,7 +225,8 @@ function buildGame(g, allEvents) {
     const s = +new Date(e.s), en = +new Date(e.e);
     const dur = en - s;
     if (dur > LONG_MS || e.st) {
-      if (en > NOW - 7 * 864e5) folded.push(e);
+      if (en > NOW) folded.push(e);
+      else if (en > NOW - 21 * 864e5) ended.push(e);
     } else if (en < NOW) {
       if (en > NOW - 21 * 864e5) ended.push(e);
     } else {
