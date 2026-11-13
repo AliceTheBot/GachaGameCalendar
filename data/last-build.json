@@ -1,5 +1,5 @@
 {
- "at": "2026-11-12T02:06:16.578Z",
+ "at": "2026-11-13T01:38:23.086Z",
  "data": [
   {
    "id": "genshin",
@@ -124,7 +124,15 @@
    "accent": "#9b8cff",
    "mid": 1340190821,
    "logo": "assets/logo-starrail.webp",
-   "events": [],
+   "events": [
+    {
+     "t": "神说要有笑（下篇）",
+     "img": "assets/auto-starrail-a0cb9460.webp",
+     "s": "2026-11-12T04:00:00.000Z",
+     "e": "2026-11-29T15:59:00.000Z",
+     "d": "由官方动态自动收录，可补充说明。"
+    }
+   ],
    "pools": [],
    "soon": [],
    "folded": [],
