@@ -400,6 +400,46 @@
       "img": "assets/ys-g72-xunli.webp",
       "st": true,
       "why": "7.2 版本长线"
+    },
+    {
+      "game": "starrail",
+      "title": "星际和平盛典：成名之路",
+      "s": "2026-11-11T11:00:00+08:00",
+      "e": "2026-12-23T03:59:00+08:00",
+      "desc": "",
+      "img": "assets/sr-chengming.webp",
+      "st": true,
+      "why": "4.7 版本长线"
+    },
+    {
+      "game": "starrail",
+      "title": "奇库寻遗",
+      "s": "2026-11-11T11:00:00+08:00",
+      "e": "2026-12-23T03:59:00+08:00",
+      "desc": "",
+      "img": "assets/sr-qiku.webp",
+      "st": true,
+      "why": "4.7 版本长线"
+    },
+    {
+      "game": "wuwa",
+      "title": "第二索拉：未名之梦",
+      "s": "2026-11-12T11:00:00+08:00",
+      "e": "2026-12-21T11:59:00+08:00",
+      "desc": "",
+      "img": "assets/ww-erasola.webp",
+      "st": true,
+      "why": "3.8 版本长线"
+    },
+    {
+      "game": "starrail",
+      "title": "剧场版绒绒号：欢闹厨房",
+      "s": "2026-11-11T11:00:00+08:00",
+      "e": "2026-12-23T03:59:00+08:00",
+      "desc": "",
+      "img": "assets/sr-rongrong.webp",
+      "st": true,
+      "why": "4.7 版本长线"
     }
   ],
   "notes": [
