@@ -1,5 +1,5 @@
 {
- "at": "2026-11-13T13:43:54.957Z",
+ "at": "2026-11-14T01:12:19.783Z",
  "data": [
   {
    "id": "genshin",
@@ -200,11 +200,6 @@
      "img": "assets/starrail-16.webp"
     },
     {
-     "n": "花藏繁生",
-     "time": "10/30 04:00 – 11/11 03:59",
-     "img": "assets/auto-starrail-ee86f473.webp"
-    },
-    {
      "n": "4.7 版本前瞻《阿哈之夜》",
      "time": "10/27 19:30 – 10/31 04:00",
      "img": "assets/pv-starrail-aha.webp"
@@ -367,15 +362,7 @@
    "accent": "#7fc9a6",
    "mid": 1265652806,
    "logo": "assets/logo-endfield.webp",
-   "events": [
-    {
-     "t": "予众魂的新光影",
-     "img": "assets/auto-endfield-5965e7c3.webp",
-     "s": "2026-10-31T04:00:00.000Z",
-     "e": "2026-11-13T20:00:00.000Z",
-     "d": "由官方动态自动收录，可补充说明。"
-    }
-   ],
+   "events": [],
    "pools": [
     {
      "chars": [
@@ -399,6 +386,11 @@
    ],
    "folded": [],
    "ended": [
+    {
+     "n": "予众魂的新光影",
+     "time": "10/31 12:00 – 11/14 04:00",
+     "img": "assets/auto-endfield-5965e7c3.webp"
+    },
     {
      "n": "烟火生缘",
      "time": "10/15 12:00 – 11/05 12:00",
