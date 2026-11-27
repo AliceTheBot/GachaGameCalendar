@@ -1,5 +1,5 @@
 {
- "at": "2026-11-26T03:21:28.249Z",
+ "at": "2026-11-27T03:26:44.104Z",
  "data": [
   {
    "id": "genshin",
@@ -401,23 +401,7 @@
      "img": "assets/ef-mogu.webp"
     }
    ],
-   "ended": [
-    {
-     "n": "烟火生缘",
-     "time": "10/15 12:00 – 11/05 12:00",
-     "img": "assets/endfield-34.webp"
-    },
-    {
-     "n": "墨分诸彩",
-     "time": "10/15 12:00 – 11/05 12:00",
-     "img": "assets/endfield-35.webp"
-    },
-    {
-     "n": "万物有灵（7 日签到）",
-     "time": "10/15 12:00 – 11/05 11:59",
-     "img": "assets/endfield-36.webp"
-    }
-   ]
+   "ended": []
   }
  ]
 }
