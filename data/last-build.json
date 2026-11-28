@@ -1,5 +1,5 @@
 {
- "at": "2026-11-27T03:26:44.104Z",
+ "at": "2026-11-28T03:02:25.180Z",
  "data": [
   {
    "id": "genshin",
@@ -8,7 +8,15 @@
    "accent": "#e8c37a",
    "mid": 401742377,
    "logo": "assets/logo-genshin.webp",
-   "events": [],
+   "events": [
+    {
+     "t": "奇域拾光季",
+     "img": "assets/auto-genshin-49d3c265.webp",
+     "s": "2026-11-27T04:00:00.000Z",
+     "e": "2026-12-07T19:59:00.000Z",
+     "d": "由官方动态自动收录，可补充说明。"
+    }
+   ],
    "pools": [],
    "soon": [],
    "folded": [
